@@ -1,0 +1,1273 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Гастрономический уикенд: 5 Кухонь 🎉</title>
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --tg-bg: var(--tg-theme-bg-color, #0d0e1b);
+      --tg-text: var(--tg-theme-text-color, #ffffff);
+      --tg-hint: var(--tg-theme-hint-color, #9ca3af);
+      --primary-gradient: linear-gradient(135deg, #ff5e62, #ff9966);
+      --card-bg: rgba(255, 255, 255, 0.06);
+      --card-border: rgba(255, 255, 255, 0.12);
+      --jp-color: #ff5e62;
+      --mx-color: #ff793f;
+      --it-color: #feca57;
+      --ru-color: #1dd1a1;
+      --de-color: #48dbfb;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, sans-serif;
+      background: var(--tg-bg);
+      color: var(--tg-text);
+      min-height: 100vh;
+      overflow-x: hidden;
+      padding-bottom: 30px;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    #app {
+      max-width: 460px;
+      margin: 0 auto;
+      padding: 16px 16px 40px;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* Фоновые градиентные свечения */
+    .ambient-glow {
+      position: fixed;
+      width: 320px;
+      height: 320px;
+      border-radius: 50%;
+      filter: blur(100px);
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0.18;
+    }
+    .glow-1 { top: -60px; left: -80px; background: #ff5e62; }
+    .glow-2 { bottom: 100px; right: -80px; background: #48dbfb; }
+    /* Приветственная карточка в первом окне */
+    .hero-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 24px;
+      padding: 22px 18px;
+      text-align: center;
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      margin-bottom: 16px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
+    }
+    .hero-title {
+      font-size: 24px;
+      font-weight: 800;
+      line-height: 1.25;
+      margin-bottom: 10px;
+      background: linear-gradient(90deg, #ff9966, #ff5e62, #feca57);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .hero-subtitle {
+      font-size: 14.5px;
+      color: #cbd5e1;
+      line-height: 1.5;
+      margin: 0;
+    }
+    .guest-highlight {
+      color: #ffffff;
+      font-weight: 700;
+    }
+    .tab-bar {
+      display: flex;
+      background: rgba(255, 255, 255, 0.06);
+      padding: 4px;
+      border-radius: 16px;
+      margin-bottom: 18px;
+      border: 1px solid var(--card-border);
+      gap: 4px;
+    }
+    .tab-btn {
+      flex: 1;
+      padding: 10px 6px;
+      border-radius: 12px;
+      border: none;
+      background: transparent;
+      color: var(--tg-hint);
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.25s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+    .tab-btn.active {
+      background: rgba(255, 255, 255, 0.14);
+      color: #ffffff;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    }
+
+    .tab-content { display: none; }
+    .tab-content.active {
+      display: block;
+      animation: fadeIn 0.3s ease;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ══════ КАРТОЧКИ КУХОНЬ (ONE PLATE = ONE KITCHEN) ══════ */
+    .kitchens-intro {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px;
+      padding: 0 4px;
+    }
+    .kitchens-intro-title {
+      font-size: 16px;
+      font-weight: 700;
+    }
+    .kitchens-selected-counter {
+      font-size: 12px;
+      color: #1dd1a1;
+      background: rgba(29, 209, 161, 0.12);
+      border: 1px solid rgba(29, 209, 161, 0.3);
+      padding: 3px 10px;
+      border-radius: 12px;
+      font-weight: 600;
+    }
+
+    .plate-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 22px;
+      margin-bottom: 18px;
+      overflow: hidden;
+      backdrop-filter: blur(14px);
+      transition: transform 0.2s ease, border-color 0.2s ease;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.18);
+    }
+    .plate-card:hover {
+      border-color: rgba(255, 255, 255, 0.22);
+    }
+
+    .plate-header {
+      padding: 16px 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      position: relative;
+    }
+    .plate-header-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .plate-flag-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.2);
+    }
+    .plate-title-box h3 {
+      font-size: 17px;
+      font-weight: 700;
+      color: #ffffff;
+      margin: 0;
+    }
+    .plate-action-btn {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 10px;
+      color: #fff;
+      font-size: 11.5px;
+      padding: 6px 10px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: background 0.2s;
+    }
+
+    .plate-body {
+      padding: 14px 16px 16px;
+    }
+
+    /* Список блюд и напитков внутри кухни */
+    .dish-group-title {
+      font-size: 11.5px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      color: var(--tg-hint);
+      margin: 8px 0 10px 4px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .dish-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .dish-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: rgba(255, 255, 255, 0.035);
+      border: 1px solid rgba(255, 255, 255, 0.07);
+      border-radius: 14px;
+      padding: 10px 12px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      user-select: none;
+    }
+    .dish-item:active {
+      transform: scale(0.985);
+    }
+    .dish-item.selected {
+      background: rgba(255, 255, 255, 0.09);
+      border-color: rgba(255, 255, 255, 0.25);
+    }
+
+    .dish-info {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex: 1;
+    }
+    .dish-icon {
+      font-size: 20px;
+      width: 28px;
+      text-align: center;
+      flex-shrink: 0;
+    }
+    .dish-name {
+      font-size: 14px;
+      font-weight: 600;
+      color: #f1f2f6;
+      line-height: 1.35;
+    }
+
+    .dish-meta {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .dish-item-wrapper {
+      margin-bottom: 8px;
+    }
+    .dish-item-wrapper:last-child {
+      margin-bottom: 0;
+    }
+    .dish-item.has-sub-open {
+      border-bottom-left-radius: 4px;
+      border-bottom-right-radius: 4px;
+      border-bottom: 1px dashed rgba(255, 255, 255, 0.15);
+    }
+    .dish-suboptions {
+      display: none;
+      background: rgba(0, 0, 0, 0.32);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-top: none;
+      border-radius: 0 0 14px 14px;
+      padding: 10px 12px 12px;
+      backdrop-filter: blur(8px);
+    }
+    .dish-suboptions.open {
+      display: block;
+      animation: subSlideDown 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    @keyframes subSlideDown {
+      from { opacity: 0; transform: translateY(-6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .dish-suboptions-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 7px;
+    }
+    .dish-suboptions-title {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--tg-hint);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .dish-suboptions-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 6px;
+    }
+    @media (max-width: 360px) {
+      .dish-suboptions-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+    .suboption-chip {
+      background: rgba(255, 255, 255, 0.07);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 10px;
+      padding: 7px 4px;
+      font-size: 12px;
+      font-weight: 600;
+      color: #e0e2ec;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .suboption-chip:active {
+      transform: scale(0.96);
+    }
+    .suboption-chip.active {
+      background: linear-gradient(135deg, #48dbfb, #1dd1a1);
+      border-color: #48dbfb;
+      color: #0b1021;
+      font-weight: 800;
+      box-shadow: 0 2px 10px rgba(72, 219, 251, 0.35);
+    }
+    .dish-sub-selected {
+      font-size: 12px;
+      color: #48dbfb;
+      font-weight: 600;
+      margin-left: 4px;
+    }
+    .dish-checkbox {
+      width: 22px;
+      height: 22px;
+      border-radius: 7px;
+      border: 2px solid rgba(255, 255, 255, 0.3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s ease;
+      flex-shrink: 0;
+    }
+    .dish-item.selected .dish-checkbox {
+      background: #1dd1a1;
+      border-color: #1dd1a1;
+    }
+    .dish-checkbox-check {
+      display: none;
+      color: #000;
+      font-size: 13px;
+      font-weight: 900;
+    }
+    .dish-item.selected .dish-checkbox-check {
+      display: block;
+    }
+
+    /* Карточка с деталями (Таб 2 и 3) */
+    .info-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 20px;
+      padding: 18px;
+      margin-bottom: 16px;
+      backdrop-filter: blur(12px);
+    }
+    .info-row {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 10px 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    }
+    .info-row:last-child {
+      border-bottom: none;
+      padding-bottom: 0;
+    }
+    .info-row:first-child {
+      padding-top: 0;
+    }
+    .info-icon {
+      width: 42px;
+      height: 42px;
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.07);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      flex-shrink: 0;
+    }
+    .info-meta { text-align: left; }
+    .info-label {
+      font-size: 11px;
+      color: var(--tg-hint);
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+      margin-bottom: 2px;
+    }
+    .info-value {
+      font-size: 14.5px;
+      font-weight: 600;
+      color: #ffffff;
+    }
+
+    .checklist-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 13.5px;
+      color: #e4e4e7;
+      padding: 9px 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+      line-height: 1.4;
+    }
+    .checklist-item:last-child { border-bottom: none; }
+
+    /* Кнопки */
+    .btn {
+      width: 100%;
+      padding: 15px;
+      border-radius: 16px;
+      border: none;
+      font-size: 15.5px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      box-sizing: border-box;
+    }
+    .btn:active { transform: scale(0.98); }
+    .btn-primary {
+      background: var(--primary-gradient);
+      color: #ffffff;
+      box-shadow: 0 4px 20px rgba(255, 94, 98, 0.4);
+    }
+    .btn-secondary {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      color: #ffffff;
+      margin-top: 10px;
+    }
+    .btn-danger-ghost {
+      background: none;
+      border: none;
+      color: #ef4444;
+      font-size: 13.5px;
+      padding: 12px;
+      cursor: pointer;
+      width: 100%;
+      margin-top: 6px;
+    }
+
+
+    /* Модальное окно (Bottom Sheet) */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.8);
+      z-index: 100;
+      align-items: flex-end;
+      justify-content: center;
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+    }
+    .modal-overlay.active {
+      display: flex;
+      animation: fadeIn 0.25s ease;
+    }
+    .modal-sheet {
+      background: #151726;
+      border-top-left-radius: 26px;
+      border-top-right-radius: 26px;
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      border-bottom: none;
+      width: 100%;
+      max-width: 480px;
+      padding: 20px 20px 32px;
+      box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.5);
+      animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+    @keyframes slideUp {
+      from { transform: translateY(100%); }
+      to { transform: translateY(0); }
+    }
+    .sheet-handle {
+      width: 40px;
+      height: 4px;
+      background: rgba(255, 255, 255, 0.25);
+      border-radius: 4px;
+      margin: 0 auto 16px;
+    }
+    .sheet-title {
+      font-size: 20px;
+      font-weight: 800;
+      margin-bottom: 4px;
+      text-align: center;
+    }
+    .sheet-desc {
+      font-size: 13.5px;
+      color: var(--tg-hint);
+      text-align: center;
+      margin-bottom: 20px;
+      line-height: 1.4;
+    }
+
+    /* Формы внутри модалки */
+    .form-group {
+      margin-bottom: 18px;
+    }
+    .form-label {
+      font-size: 12.5px;
+      font-weight: 700;
+      color: #d1d5db;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+      margin-bottom: 8px;
+      display: block;
+    }
+    .option-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+    .option-chip {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
+      padding: 10px;
+      font-size: 13px;
+      font-weight: 600;
+      color: #e5e7eb;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .option-chip.selected {
+      background: rgba(255, 94, 98, 0.18);
+      border-color: #ff5e62;
+      color: #ffffff;
+    }
+    .form-input {
+      width: 100%;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 14px;
+      padding: 12px 14px;
+      color: #fff;
+      font-size: 14px;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .form-input:focus {
+      border-color: #ff5e62;
+    }
+
+    /* Сводка выбранных блюд в модалке */
+    .selected-summary-box {
+      background: rgba(29, 209, 161, 0.08);
+      border: 1px solid rgba(29, 209, 161, 0.25);
+      border-radius: 14px;
+      padding: 12px;
+      margin-bottom: 18px;
+      font-size: 13px;
+      line-height: 1.45;
+    }
+    .summary-title {
+      font-weight: 700;
+      color: #1dd1a1;
+      margin-bottom: 4px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+  </style>
+</head>
+<body>
+  <!-- Фоновые эффекты -->
+  <div class="ambient-glow glow-1"></div>
+  <div class="ambient-glow glow-2"></div>
+
+  <div id="app">
+    <!-- ════════════ СТАРТОВЫЙ ЭКРАН: ТОЛЬКО ПРИВЕТСТВИЕ И ПОДТВЕРЖДЕНИЕ (БЕЗ ПОЛЗУНКА) ════════════ -->
+    <div id="welcome-screen">
+      <!-- Приветственная карточка -->
+      <div class="hero-card">
+        <h1 class="hero-title" id="welcome-title">Гастро-уикенд 5 Кухонь 🎉</h1>
+        <p class="hero-subtitle" id="welcome-sub">
+          <span class="guest-highlight" id="guest-name">Друг</span>, мы собираемся нашей компанией на дегустацию 5 национальных кухонь в гармоничном порядке подачи!
+        </p>
+      </div>
+
+      <div class="info-card">
+        <div class="info-row">
+          <div class="info-icon" style="background: rgba(255, 94, 98, 0.15);">📅</div>
+          <div class="info-meta">
+            <div class="info-label">Дата & Время</div>
+            <div class="info-value" id="event-date">Суббота, 15 Сентября • 12:00</div>
+          </div>
+        </div>
+        <div class="info-row">
+          <div class="info-icon" style="background: rgba(254, 202, 87, 0.15);">📍</div>
+          <div class="info-meta">
+            <div class="info-label">Локация</div>
+            <div class="info-value" id="event-location">Загородная вилла «Forest Loft», Подмосковье</div>
+          </div>
+        </div>
+        <div class="info-row">
+          <div class="info-icon" style="background: rgba(72, 219, 251, 0.15);">🍽️</div>
+          <div class="info-meta">
+            <div class="info-label">Формат</div>
+            <div class="info-value">Гастрономический сет: 5 кухонь мира</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Главная кнопка: подтверждает участие и открывает доступ к интерфейсу -->
+      <button class="btn btn-primary" id="hero-rsvp-btn" onclick="approveAndTeleport()" style="margin-top: 18px; font-size: 16px; padding: 16px;">
+        <span>Подтвердить</span>
+      </button>
+    </div>
+
+    <!-- ════════════ ОСНОВНОЙ ИНТЕРФЕЙС (ДОСТУПЕН ТОЛЬКО ПОСЛЕ ПОДТВЕРЖДЕНИЯ) ════════════ -->
+    <div id="main-app" style="display: none;">
+      <!-- Вкладки навигации основного интерфейса -->
+      <div class="tab-bar">
+        <button class="tab-btn active" id="tab-btn-kitchens" onclick="switchTab('kitchens')">
+          <span>🍽️ Меню (5 кухонь)</span>
+        </button>
+        <button class="tab-btn" id="tab-btn-info" onclick="switchTab('info')">
+          <span>ℹ️ Детали события</span>
+        </button>
+      </div>
+
+      <!-- Вкладка меню 5 кухонь -->
+      <div id="tab-kitchens" class="tab-content active">
+        <div class="kitchens-intro">
+          <div class="kitchens-intro-title">Очередь подачи:</div>
+          <div class="kitchens-selected-counter" id="selected-counter">Выбрано: 0 блюд</div>
+        </div>
+        <!-- Контейнер для 5 плашек кухонь -->
+        <div id="kitchens-container"></div>
+      </div>
+
+      <!-- Вкладка деталей события -->
+      <div id="tab-info" class="tab-content">
+        <div class="info-card">
+          <div class="info-row">
+            <div class="info-icon" style="background: rgba(255, 94, 98, 0.15);">📅</div>
+            <div class="info-meta">
+              <div class="info-label">Дата & Время</div>
+              <div class="info-value">Суббота, 15 Сентября • 12:00</div>
+            </div>
+          </div>
+          <div class="info-row">
+            <div class="info-icon" style="background: rgba(254, 202, 87, 0.15);">📍</div>
+            <div class="info-meta">
+              <div class="info-label">Локация</div>
+              <div class="info-value">Загородная вилла «Forest Loft», Подмосковье</div>
+            </div>
+          </div>
+          <div class="info-row">
+            <div class="info-icon" style="background: rgba(72, 219, 251, 0.15);">🍽️</div>
+            <div class="info-meta">
+              <div class="info-label">Формат</div>
+              <div class="info-value">Гастрономический сет: 5 кухонь мира</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="info-card">
+          <h3 style="font-size: 16px; margin-bottom: 12px; font-weight: 700;">🎒 Что взять с собой:</h3>
+          <div class="checklist-item">
+            <span>😋</span>
+            <span>Хороший аппетит и готовность пробовать 5 разных кухонь</span>
+          </div>
+          <div class="checklist-item">
+            <span>🩱</span>
+            <span>Купальные принадлежности (бассейн, баня/сауна)</span>
+          </div>
+          <div class="checklist-item">
+            <span>🧥</span>
+            <span>Тёплую кофту или худи для вечернего костра</span>
+          </div>
+          <div class="checklist-item">
+            <span>🎲</span>
+            <span>Любимые настольные игры и классное настроение</span>
+          </div>
+        </div>
+
+        <div class="info-card">
+          <h3 style="font-size: 16px; margin-bottom: 12px; font-weight: 700;">📍 Как добраться:</h3>
+          <p style="font-size: 13.5px; color: #c4c6d6; line-height: 1.5; margin-bottom: 14px;">
+            Точка сбора первой группы — м. Юго-Западная (организованный трансфер на машинах), либо своим ходом по навигатору.
+          </p>
+          <button class="btn btn-secondary" onclick="openMap()">
+            <span>🗺️ Открыть точку на Яндекс.Картах</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <script>
+    // ════════════ CONFIGURATION: 5 KITCHENS (ONE PLATE = ONE KITCHEN) ════════════
+    // Гармоничная очередь: лёгкий старт -> яркий стритфуд -> горячий обед -> освежающие закуски -> гриль-финал
+    const EVENT_CONFIG = {
+      title: "Гастрономический уикенд: 5 Кухонь 🎉",
+      dateString: "2026-09-15T12:00:00",
+      locationName: "Загородная вилла «Forest Loft», Подмосковье",
+      mapUrl: "https://yandex.ru/maps",
+      plates: [
+        {
+          id: "japan",
+          number: 1,
+          title: "Японская кухня",
+          flag: "🇯🇵",
+          icon: "🍣",
+          color: "var(--jp-color)",
+          colorHex: "#ff5e62",
+          items: [
+            { id: "jp_1", name: "Нигири с лососем", type: "food", icon: "🍣" },
+            { id: "jp_2", name: "Нигири с тунцом", type: "food", icon: "🐟" },
+            { id: "jp_3", name: "Роллы", type: "food", icon: "🍱" },
+            { id: "jp_4", name: "Саке", type: "drink", icon: "🍶" },
+            { id: "jp_5", name: "Матча", type: "drink", icon: "🍵" }
+          ]
+        },
+        {
+          id: "mexico",
+          number: 2,
+          title: "Мексиканская кухня",
+          flag: "🇲🇽",
+          icon: "🌮",
+          color: "var(--mx-color)",
+          colorHex: "#ff793f",
+          items: [
+            { id: "mx_1", name: "Тако", type: "food", icon: "🌮" },
+            { id: "mx_2", name: "Буррито", type: "food", icon: "🌯" },
+            { id: "mx_3", name: "Corona Extra", type: "drink", icon: "🍺" }
+          ]
+        },
+        {
+          id: "italy",
+          number: 3,
+          title: "Итальянская кухня",
+          flag: "🇮🇹",
+          icon: "🍕",
+          color: "var(--it-color)",
+          colorHex: "#feca57",
+          items: [
+            { id: "it_1", name: "Пицца", type: "food", icon: "🍕" },
+            { id: "it_2", name: "Карбонара", type: "food", icon: "🍝" },
+            { id: "it_3", name: "Паста с соусом песто", type: "food", icon: "🌿" },
+            { id: "it_4", name: "Вино", type: "drink", icon: "🍷" }
+          ]
+        },
+        {
+          id: "russia",
+          number: 4,
+          title: "Русская кухня",
+          flag: "🇷🇺",
+          icon: "🪆",
+          color: "var(--ru-color)",
+          colorHex: "#1dd1a1",
+          items: [
+            { id: "ru_1", name: "Сало", type: "food", icon: "🥓" },
+            { id: "ru_2", name: "Укроп", type: "food", icon: "🌿" },
+            { id: "ru_3", name: "Рыбка", type: "food", icon: "🐟" },
+            { id: "ru_4", name: "Водка", type: "drink", icon: "🧊" }
+          ]
+        },
+        {
+          id: "germany",
+          number: 5,
+          title: "Немецкая кухня",
+          flag: "🇩🇪",
+          icon: "🥨",
+          color: "var(--de-color)",
+          colorHex: "#48dbfb",
+          items: [
+            { id: "de_1", name: "Жареные сосиски с картофелем и квашеной капустой", type: "food", icon: "🌭" },
+            { id: "de_2", name: "Претцель", type: "food", icon: "🥨" },
+            { id: "de_3", name: "Jägermeister", type: "drink", icon: "🦌" },
+            { id: "de_4", name: "Пиво", type: "drink", icon: "🍺", hasSubOptions: true, subOptions: ["Вайш", "Лагер", "Пилснер", "Любое"], defaultSubOption: "Любое" },
+            { id: "de_5", name: "Шорли", type: "drink", icon: "🍏" }
+          ]
+        }
+      ]
+    };
+
+    // ════════════ TELEGRAM MINI APP INITIALIZATION ════════════
+    const tg = window.Telegram ? window.Telegram.WebApp : null;
+    let userId = "";
+    let userName = "Друг";
+
+    if (tg) {
+      try {
+        tg.ready();
+        tg.expand();
+        if (tg.initDataUnsafe && tg.initDataUnsafe.user) {
+          userId = tg.initDataUnsafe.user.id || "";
+          userName = tg.initDataUnsafe.user.first_name || "Друг";
+        }
+      } catch (e) {
+        console.warn("Telegram WebApp init warning:", e);
+      }
+    }
+
+    // URL query params fallback (from bot link ?name=...&user_id=...)
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('name')) userName = urlParams.get('name');
+    if (urlParams.get('user_id')) userId = urlParams.get('user_id');
+
+    // Update guest name in UI with user profile name
+    const guestNameEl = document.getElementById('guest-name');
+    if (guestNameEl && userName) {
+      guestNameEl.innerText = userName;
+    }
+
+
+
+    // ════════════ SELECTED DISHES STATE ════════════
+    const selectedDishes = new Set();
+    const dishSubSelections = { de_4: ["Любое"] };
+
+    function getSubSelectionText(dishId) {
+      const arr = dishSubSelections[dishId] || ["Любое"];
+      return arr.join(', ');
+    }
+
+    function findItemById(id) {
+      for (const p of EVENT_CONFIG.plates) {
+        for (const it of p.items) {
+          if (it.id === id) return it;
+        }
+      }
+      return null;
+    }
+
+    function toggleDish(dishId) {
+      const willSelect = !selectedDishes.has(dishId);
+
+      if (willSelect) {
+        selectedDishes.add(dishId);
+      } else {
+        selectedDishes.delete(dishId);
+      }
+
+      const itemEl = document.getElementById(`dish-${dishId}`);
+      if (itemEl) {
+        itemEl.classList.toggle('selected', willSelect);
+      }
+
+      // Handle suboptions opening for items like Beer
+      const suboptionsEl = document.getElementById(`suboptions-${dishId}`);
+      const labelEl = document.getElementById(`sub-label-${dishId}`);
+      if (suboptionsEl) {
+        suboptionsEl.classList.toggle('open', willSelect);
+        if (itemEl) {
+          itemEl.classList.toggle('has-sub-open', willSelect);
+        }
+        if (labelEl) {
+          const chosenText = getSubSelectionText(dishId);
+          labelEl.innerText = willSelect ? `(${chosenText})` : '';
+        }
+      }
+
+      updateSelectedCount();
+
+      if (tg && tg.HapticFeedback) {
+        tg.HapticFeedback.selectionChanged();
+      }
+    }
+
+    function selectSubOption(dishId, opt, event) {
+      if (event) {
+        event.stopPropagation();
+      }
+
+      const specificTypes = ["Вайш", "Лагер", "Пилснер"];
+      const allOrder = ["Вайш", "Лагер", "Пилснер", "Любое"];
+
+      if (!dishSubSelections[dishId]) {
+        dishSubSelections[dishId] = ["Любое"];
+      }
+
+      let current = [...dishSubSelections[dishId]];
+
+      if (opt === "Любое") {
+        // Клик по «Любое» сбрасывает конкретные сорта и оставляет только «Любое»
+        current = ["Любое"];
+      } else {
+        // Если было выбрано «Любое», убираем его при выборе конкретного сорта
+        current = current.filter(x => x !== "Любое");
+
+        if (current.includes(opt)) {
+          // Повторный клик — снимаем выбор с этого сорта
+          current = current.filter(x => x !== opt);
+          // Если сняты все сорта, автоматически возвращаем «Любое»
+          if (current.length === 0) {
+            current = ["Любое"];
+          }
+        } else {
+          // Добавляем выбранный сорт (можно выбрать 1 или 2 сорта)
+          current.push(opt);
+
+          // ПРАВИЛО: если выбраны все 3 конкретных сорта (кроме «Любое»), автоматически выбирается «Любое»
+          const specificSelectedCount = current.filter(x => specificTypes.includes(x)).length;
+          if (specificSelectedCount >= 3) {
+            current = ["Любое"];
+          }
+        }
+      }
+
+      // Сортируем порядок для единообразного отображения
+      current.sort((a, b) => allOrder.indexOf(a) - allOrder.indexOf(b));
+      dishSubSelections[dishId] = current;
+
+      // Убеждаемся, что родительское блюдо «Пиво» выбрано
+      if (!selectedDishes.has(dishId)) {
+        selectedDishes.add(dishId);
+        const itemEl = document.getElementById(`dish-${dishId}`);
+        if (itemEl) {
+          itemEl.classList.add('selected');
+          itemEl.classList.add('has-sub-open');
+        }
+        const suboptionsEl = document.getElementById(`suboptions-${dishId}`);
+        if (suboptionsEl) suboptionsEl.classList.add('open');
+      }
+
+      // Обновляем подсветку чипсов
+      const suboptionsEl = document.getElementById(`suboptions-${dishId}`);
+      if (suboptionsEl) {
+        suboptionsEl.querySelectorAll('.suboption-chip').forEach(btn => {
+          const btnText = btn.innerText.trim();
+          btn.classList.toggle('active', current.includes(btnText));
+        });
+      }
+
+      // Обновляем бейдж в строке блюда: «(Вайш, Лагер)» или «(Любое)»
+      const labelEl = document.getElementById(`sub-label-${dishId}`);
+      if (labelEl) {
+        labelEl.innerText = `(${current.join(', ')})`;
+      }
+
+      updateSelectedCount();
+
+      if (tg && tg.HapticFeedback) {
+        tg.HapticFeedback.selectionChanged();
+      }
+    }
+
+    function selectAllInKitchen(kitchenId) {
+      const kitchen = EVENT_CONFIG.plates.find(k => k.id === kitchenId);
+      if (!kitchen) return;
+
+      const allSelected = kitchen.items.every(item => selectedDishes.has(item.id));
+
+      kitchen.items.forEach(item => {
+        if (allSelected) {
+          selectedDishes.delete(item.id);
+        } else {
+          selectedDishes.add(item.id);
+        }
+        const itemEl = document.getElementById(`dish-${item.id}`);
+        if (itemEl) {
+          itemEl.classList.toggle('selected', !allSelected);
+        }
+        const suboptionsEl = document.getElementById(`suboptions-${item.id}`);
+        const labelEl = document.getElementById(`sub-label-${item.id}`);
+        if (suboptionsEl) {
+          suboptionsEl.classList.toggle('open', !allSelected);
+          if (itemEl) {
+            itemEl.classList.toggle('has-sub-open', !allSelected);
+          }
+          if (labelEl) {
+            const chosenText = getSubSelectionText(item.id);
+            labelEl.innerText = !allSelected ? `(${chosenText})` : '';
+          }
+        }
+      });
+
+      updateSelectedCount();
+
+      if (tg && tg.HapticFeedback) {
+        tg.HapticFeedback.impactOccurred('light');
+      }
+    }
+
+    function updateSelectedCount() {
+      const count = selectedDishes.size;
+      const counterEl = document.getElementById('selected-counter');
+      if (counterEl) {
+        counterEl.innerText = `Выбрано: ${count} блюд`;
+      }
+
+      // Update modal summary text
+      const summaryTextEl = document.getElementById('summary-dishes-text');
+      if (summaryTextEl) {
+        if (count === 0) {
+          summaryTextEl.innerText = "Пока ничего не выбрано — можно отметить прямо в меню или выбрать любимые напитки ниже.";
+        } else {
+          const names = [];
+          EVENT_CONFIG.plates.forEach(p => {
+            p.items.forEach(it => {
+              if (selectedDishes.has(it.id)) {
+                let displayName = it.name;
+                if (it.hasSubOptions && dishSubSelections[it.id]) {
+                  displayName += ` (${getSubSelectionText(it.id)})`;
+                }
+                names.push(`${it.icon} ${displayName}`);
+              }
+            });
+          });
+          summaryTextEl.innerHTML = names.map(n => `<span style="display:inline-block; background:rgba(255,255,255,0.08); padding:2px 8px; border-radius:8px; margin:2px;">${n}</span>`).join(' ');
+        }
+      }
+    }
+
+    // ════════════ RENDER 5 KITCHEN PLATES ════════════
+    function renderKitchenPlates() {
+      const container = document.getElementById('kitchens-container');
+      if (!container) return;
+      container.innerHTML = "";
+
+      EVENT_CONFIG.plates.forEach((plate) => {
+        const card = document.createElement('div');
+        card.className = "plate-card";
+
+        // Separate food and drink items
+        const foodItems = plate.items.filter(i => i.type === 'food');
+        const drinkItems = plate.items.filter(i => i.type === 'drink');
+
+        const renderItems = (items) => items.map(item => {
+          const isSelected = selectedDishes.has(item.id);
+          if (item.hasSubOptions) {
+            const chosenList = dishSubSelections[item.id] || (item.defaultSubOption ? [item.defaultSubOption] : ["Любое"]);
+            const chosenText = chosenList.join(', ');
+            return `
+              <div class="dish-item-wrapper" id="dish-wrapper-${item.id}">
+                <div class="dish-item ${isSelected ? 'selected has-sub-open' : ''}" id="dish-${item.id}" onclick="toggleDish('${item.id}')">
+                  <div class="dish-info">
+                    <span class="dish-icon">${item.icon}</span>
+                    <span class="dish-name">${item.name} <span class="dish-sub-selected" id="sub-label-${item.id}">${isSelected ? '(' + chosenText + ')' : ''}</span></span>
+                  </div>
+                  <div class="dish-meta">
+                    <div class="dish-checkbox">
+                      <span class="dish-checkbox-check">✓</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="dish-suboptions ${isSelected ? 'open' : ''}" id="suboptions-${item.id}">
+                  <div class="dish-suboptions-header">
+                    <span class="dish-suboptions-title">Сорт пива (1–2 сорта или «Любое»):</span>
+                  </div>
+                  <div class="dish-suboptions-grid">
+                    ${item.subOptions.map(opt => `
+                      <button type="button" class="suboption-chip ${chosenList.includes(opt) ? 'active' : ''}"
+                        onclick="selectSubOption('${item.id}', '${opt}', event)">
+                        ${opt}
+                      </button>
+                    `).join('')}
+                  </div>
+                </div>
+              </div>
+            `;
+          }
+
+          return `
+            <div class="dish-item ${isSelected ? 'selected' : ''}" id="dish-${item.id}" onclick="toggleDish('${item.id}')">
+              <div class="dish-info">
+                <span class="dish-icon">${item.icon}</span>
+                <span class="dish-name">${item.name}</span>
+              </div>
+              <div class="dish-meta">
+                <div class="dish-checkbox">
+                  <span class="dish-checkbox-check">✓</span>
+                </div>
+              </div>
+            </div>
+          `;
+        }).join('');
+
+        card.innerHTML = `
+          <div class="plate-header" style="border-left: 4px solid ${plate.colorHex};">
+            <div class="plate-header-left">
+              <div class="plate-flag-icon" style="background: ${plate.colorHex}22; border: 1px solid ${plate.colorHex}55;">
+                ${plate.flag}
+              </div>
+              <div class="plate-title-box">
+                <h3>${plate.title}</h3>
+              </div>
+            </div>
+            <button class="plate-action-btn" onclick="selectAllInKitchen('${plate.id}')">
+              Выбрать всё
+            </button>
+          </div>
+          <div class="plate-body">
+            <div class="dish-group-title">🥘 Блюда кухни:</div>
+            <div class="dish-list">
+              ${renderItems(foodItems)}
+            </div>
+
+            <div class="dish-group-title" style="margin-top: 14px;">🍷 Напитки & Алкоголь:</div>
+            <div class="dish-list">
+              ${renderItems(drinkItems)}
+            </div>
+          </div>
+        `;
+
+        container.appendChild(card);
+      });
+    }
+
+    renderKitchenPlates();
+
+    // ════════════ TAB NAVIGATION ════════════
+    function switchTab(tabKey) {
+      document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+      document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+
+      const targetTab = document.getElementById(`tab-${tabKey}`);
+      if (targetTab) {
+        targetTab.classList.add('active');
+      }
+
+      const activeBtn = document.getElementById(`tab-btn-${tabKey}`);
+      if (activeBtn) {
+        activeBtn.classList.add('active');
+      }
+
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+
+      if (tg && tg.HapticFeedback) {
+        tg.HapticFeedback.selectionChanged();
+      }
+    }
+
+    // ════════════ APPROVE & TELEPORT TO MAIN MENU ════════════
+    function approveAndTeleport() {
+      // 1. Фиксируем подтверждение участия
+      submitRsvp('accepted');
+
+      // 2. Скрываем стартовый экран и показываем основной интерфейс
+      const welcomeScreen = document.getElementById('welcome-screen');
+      const mainApp = document.getElementById('main-app');
+      if (welcomeScreen) welcomeScreen.style.display = 'none';
+      if (mainApp) {
+        mainApp.style.display = 'block';
+        switchTab('kitchens');
+      }
+    }
+
+    // ════════════ SUBMIT RSVP (DIRECT APPROVE) ════════════
+    function submitRsvp(status) {
+      if (status === 'accepted') {
+        try {
+          localStorage.setItem('rsvp_status', 'accepted');
+        } catch (e) {}
+      }
+
+      // Собираем список названий выбранных блюд (если гость отметил что-то в меню)
+      const selectedDishNames = [];
+      EVENT_CONFIG.plates.forEach(p => {
+        p.items.forEach(it => {
+          if (selectedDishes.has(it.id)) {
+            let title = it.name;
+            if (it.hasSubOptions && dishSubSelections[it.id]) {
+              title += ` (${getSubSelectionText(it.id)})`;
+            }
+            selectedDishNames.push(`${title} (${p.title})`);
+          }
+        });
+      });
+
+      const payload = {
+        status: status,
+        name: userName,
+        user_id: userId,
+        guests: status === 'accepted' ? 1 : 0,
+        drink: "",
+        selected_dishes: status === 'accepted' ? selectedDishNames : [],
+        comment: ""
+      };
+
+      if (status === 'accepted') {
+        if (window.confetti) {
+          confetti({
+            particleCount: 90,
+            spread: 70,
+            origin: { y: 0.6 }
+          });
+        }
+        if (tg && tg.HapticFeedback) {
+          tg.HapticFeedback.notificationOccurred('success');
+        }
+      } else {
+        if (tg && tg.HapticFeedback) {
+          tg.HapticFeedback.notificationOccurred('warning');
+        }
+      }
+
+      // Send structured data to Telegram bot
+      if (tg && typeof tg.sendData === 'function') {
+        try {
+          tg.sendData(JSON.stringify(payload));
+        } catch (err) {
+          console.warn("tg.sendData warning:", err);
+        }
+      }
+
+      // Обновляем состояние кнопки на экране
+      const heroBtn = document.getElementById('hero-rsvp-btn');
+      if (status === 'accepted') {
+        if (heroBtn) {
+          heroBtn.innerHTML = "<span>Подтверждено</span>";
+        }
+      }
+    }
+
+    // Проверяем, было ли уже подтверждение ранее при открытии приложения
+    try {
+      // Сброс статуса для тестирования (?reset=1 в адресной строке)
+      if (urlParams.get('reset') === '1') {
+        localStorage.removeItem('rsvp_status');
+      }
+
+      if (localStorage.getItem('rsvp_status') === 'accepted') {
+        const welcomeScreen = document.getElementById('welcome-screen');
+        const mainApp = document.getElementById('main-app');
+        if (welcomeScreen) welcomeScreen.style.display = 'none';
+        if (mainApp) {
+          mainApp.style.display = 'block';
+          switchTab('kitchens');
+        }
+      }
+    } catch (e) {}
+
+    // ════════════ UTILITY ACTIONS ════════════
+    function openMap() {
+      window.open(EVENT_CONFIG.mapUrl, '_blank');
+    }
+
+  </script>
+</body>
+</html>
