@@ -129,23 +129,137 @@
     /* ══════ КАРТОЧКИ КУХОНЬ (ONE PLATE = ONE KITCHEN) ══════ */
     .kitchens-intro {
       display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-bottom: 16px;
+      padding: 0 2px;
+    }
+    .kitchens-intro-header {
+      display: flex;
       align-items: center;
       justify-content: space-between;
-      margin-bottom: 12px;
-      padding: 0 4px;
     }
     .kitchens-intro-title {
       font-size: 16px;
       font-weight: 700;
+      color: #ffffff;
+      letter-spacing: -0.2px;
     }
     .kitchens-selected-counter {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .count-pill {
       font-size: 12px;
-      color: #1dd1a1;
-      background: rgba(29, 209, 161, 0.12);
-      border: 1px solid rgba(29, 209, 161, 0.3);
-      padding: 3px 10px;
-      border-radius: 12px;
-      font-weight: 600;
+      font-weight: 700;
+      padding: 3px 9px;
+      border-radius: 10px;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+    }
+    .count-pill.priority-pill {
+      background: rgba(16, 185, 129, 0.12);
+      border: 1px solid rgba(16, 185, 129, 0.35);
+      color: #34d399;
+    }
+    .count-pill.refused-pill {
+      background: rgba(244, 63, 94, 0.12);
+      border: 1px solid rgba(244, 63, 94, 0.32);
+      color: #fb7185;
+    }
+
+    /* Режим выбора: 2 кнопки в ряд */
+    .selection-mode-bar {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+    .mode-btn {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      padding: 10px 12px;
+      border-radius: 14px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.09);
+      color: #94a3b8;
+      cursor: pointer;
+      transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+      text-align: left;
+      user-select: none;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+    .mode-btn:active {
+      transform: scale(0.975);
+    }
+    .mode-icon {
+      width: 24px;
+      height: 24px;
+      border-radius: 7px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      font-weight: 900;
+      flex-shrink: 0;
+      background: rgba(255, 255, 255, 0.07);
+      color: #cbd5e1;
+      transition: all 0.2s ease;
+    }
+    .mode-texts {
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+    }
+    .mode-title {
+      font-size: 13.5px;
+      font-weight: 700;
+      line-height: 1.2;
+    }
+    .mode-desc {
+      font-size: 10px;
+      opacity: 0.72;
+      line-height: 1.2;
+      margin-top: 1px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    /* Активный режим: Приоритет */
+    .mode-btn.mode-priority.active {
+      background: rgba(16, 185, 129, 0.12);
+      border-color: rgba(16, 185, 129, 0.45);
+      color: #e6fffa;
+      box-shadow: 0 4px 16px rgba(16, 185, 129, 0.18);
+    }
+    .mode-btn.mode-priority.active .mode-icon {
+      background: rgba(16, 185, 129, 0.25);
+      color: #34d399;
+      border: 1px solid rgba(16, 185, 129, 0.5);
+    }
+    .mode-btn.mode-priority.active .mode-title {
+      color: #34d399;
+    }
+
+    /* Активный режим: Отказано */
+    .mode-btn.mode-refused.active {
+      background: rgba(244, 63, 94, 0.12);
+      border-color: rgba(244, 63, 94, 0.42);
+      color: #fff1f2;
+      box-shadow: 0 4px 16px rgba(244, 63, 94, 0.16);
+    }
+    .mode-btn.mode-refused.active .mode-icon {
+      background: rgba(244, 63, 94, 0.22);
+      color: #fb7185;
+      border: 1px solid rgba(244, 63, 94, 0.45);
+    }
+    .mode-btn.mode-refused.active .mode-title {
+      color: #fb7185;
     }
 
     .plate-card {
@@ -241,9 +355,40 @@
     .dish-item:active {
       transform: scale(0.985);
     }
-    .dish-item.selected {
-      background: rgba(255, 255, 255, 0.09);
-      border-color: rgba(255, 255, 255, 0.25);
+    /* Статус: Приоритет (наиболее желаемое) */
+    .dish-item.status-priority {
+      background: rgba(16, 185, 129, 0.08);
+      border-color: rgba(16, 185, 129, 0.35);
+    }
+    .dish-item.status-priority .dish-checkbox {
+      background: rgba(16, 185, 129, 0.2);
+      border-color: rgba(16, 185, 129, 0.55);
+    }
+    .dish-item.status-priority .dish-checkbox-check {
+      display: block;
+      color: #34d399;
+      font-size: 13px;
+      font-weight: 900;
+    }
+
+    /* Статус: Отказано (нежеланные блюда/напитки) */
+    .dish-item.status-refused {
+      background: rgba(244, 63, 94, 0.06);
+      border-color: rgba(244, 63, 94, 0.28);
+    }
+    .dish-item.status-refused .dish-checkbox {
+      background: rgba(244, 63, 94, 0.18);
+      border-color: rgba(244, 63, 94, 0.5);
+    }
+    .dish-item.status-refused .dish-checkbox-cross {
+      display: block;
+      color: #fb7185;
+      font-size: 13px;
+      font-weight: 900;
+    }
+    .dish-item.status-refused .dish-name {
+      color: #cbd5e1;
+      opacity: 0.8;
     }
 
     .dish-info {
@@ -322,26 +467,37 @@
       }
     }
     .suboption-chip {
-      background: rgba(255, 255, 255, 0.07);
+      background: rgba(255, 255, 255, 0.06);
       border: 1px solid rgba(255, 255, 255, 0.12);
       border-radius: 10px;
       padding: 7px 4px;
       font-size: 12px;
       font-weight: 600;
-      color: #e0e2ec;
+      color: #cbd5e1;
       text-align: center;
       cursor: pointer;
       transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 3px;
     }
     .suboption-chip:active {
       transform: scale(0.96);
     }
-    .suboption-chip.active {
-      background: linear-gradient(135deg, #48dbfb, #1dd1a1);
-      border-color: #48dbfb;
-      color: #0b1021;
-      font-weight: 800;
-      box-shadow: 0 2px 10px rgba(72, 219, 251, 0.35);
+    .suboption-chip.status-priority {
+      background: rgba(16, 185, 129, 0.18);
+      border-color: rgba(16, 185, 129, 0.45);
+      color: #34d399;
+      font-weight: 700;
+      box-shadow: 0 2px 8px rgba(16, 185, 129, 0.15);
+    }
+    .suboption-chip.status-refused {
+      background: rgba(244, 63, 94, 0.16);
+      border-color: rgba(244, 63, 94, 0.42);
+      color: #fb7185;
+      font-weight: 700;
+      box-shadow: 0 2px 8px rgba(244, 63, 94, 0.12);
     }
     .dish-sub-selected {
       font-size: 12px;
@@ -353,25 +509,46 @@
       width: 22px;
       height: 22px;
       border-radius: 7px;
-      border: 2px solid rgba(255, 255, 255, 0.3);
+      border: 2px solid rgba(255, 255, 255, 0.25);
       display: flex;
       align-items: center;
       justify-content: center;
       transition: all 0.2s ease;
       flex-shrink: 0;
     }
-    .dish-item.selected .dish-checkbox {
-      background: #1dd1a1;
-      border-color: #1dd1a1;
-    }
-    .dish-checkbox-check {
+    .dish-checkbox-check,
+    .dish-checkbox-cross {
       display: none;
-      color: #000;
-      font-size: 13px;
-      font-weight: 900;
+      line-height: 1;
     }
-    .dish-item.selected .dish-checkbox-check {
-      display: block;
+
+    /* Уведомление-тост */
+    .app-toast {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%) translateY(100px);
+      background: rgba(20, 22, 38, 0.96);
+      border: 1px solid rgba(244, 63, 94, 0.45);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.55), 0 0 20px rgba(244, 63, 94, 0.18);
+      color: #ffe4e6;
+      padding: 12px 18px;
+      border-radius: 14px;
+      font-size: 13px;
+      font-weight: 600;
+      z-index: 9999;
+      pointer-events: none;
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      opacity: 0;
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      max-width: 90%;
+      text-align: center;
+      line-height: 1.4;
+    }
+    .app-toast.visible {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
     }
 
     /* Карточка с деталями (Таб 2 и 3) */
@@ -647,6 +824,14 @@
 
     <!-- ════════════ ОСНОВНОЙ ИНТЕРФЕЙС (ДОСТУПЕН ТОЛЬКО ПОСЛЕ ПОДТВЕРЖДЕНИЯ) ════════════ -->
     <div id="main-app" style="display: none;">
+      <!-- Панель быстрого возврата к окну приглашения для удобства тестирования и редактирования -->
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+        <button type="button" onclick="showWelcomeScreen()" style="background: rgba(255, 255, 255, 0.05); border: 1px solid var(--card-border); color: #cbd5e1; border-radius: 10px; padding: 6px 12px; font-size: 12px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 6px;">
+          <span>← Окно приглашения</span>
+        </button>
+        <span style="font-size: 12px; color: var(--tg-hint);">Гастрономический сет</span>
+      </div>
+
       <!-- Вкладки навигации основного интерфейса -->
       <div class="tab-bar">
         <button class="tab-btn active" id="tab-btn-kitchens" onclick="switchTab('kitchens')">
@@ -660,11 +845,41 @@
       <!-- Вкладка меню 5 кухонь -->
       <div id="tab-kitchens" class="tab-content active">
         <div class="kitchens-intro">
-          <div class="kitchens-intro-title">Очередь подачи:</div>
-          <div class="kitchens-selected-counter" id="selected-counter">Выбрано: 0 блюд</div>
+          <div class="kitchens-intro-header">
+            <div class="kitchens-intro-title">Очередь подачи:</div>
+            <div class="kitchens-selected-counter" id="selected-counter">
+              <span class="count-pill priority-pill" title="В приоритете">✓ 0</span>
+              <span class="count-pill refused-pill" title="Отказано">✕ 0</span>
+            </div>
+          </div>
+
+          <!-- Режим выбора: 2 кнопки в ряд -->
+          <div class="selection-mode-bar">
+            <button type="button" class="mode-btn mode-priority active" id="mode-btn-priority" onclick="setSelectionMode('priority')">
+              <span class="mode-icon">✓</span>
+              <div class="mode-texts">
+                <span class="mode-title">Приоритет</span>
+                <span class="mode-desc">наиболее желаемое</span>
+              </div>
+            </button>
+            <button type="button" class="mode-btn mode-refused" id="mode-btn-refused" onclick="setSelectionMode('refused')">
+              <span class="mode-icon">✕</span>
+              <div class="mode-texts">
+                <span class="mode-title">Отказано</span>
+                <span class="mode-desc">нежеланные блюда/напитки</span>
+              </div>
+            </button>
+          </div>
         </div>
         <!-- Контейнер для 5 плашек кухонь -->
         <div id="kitchens-container"></div>
+
+        <!-- Кнопка сохранения предпочтений -->
+        <div style="margin-top: 22px; padding-bottom: 20px;">
+          <button class="btn btn-primary" id="save-preferences-btn" onclick="savePreferences()" style="font-size: 15px; padding: 15px;">
+            <span>💾 Сохранить предпочтения</span>
+          </button>
+        </div>
       </div>
 
       <!-- Вкладка деталей события -->
@@ -763,7 +978,9 @@
           items: [
             { id: "mx_1", name: "Тако", type: "food", icon: "🌮" },
             { id: "mx_2", name: "Буррито", type: "food", icon: "🌯" },
-            { id: "mx_3", name: "Corona Extra", type: "drink", icon: "🍺" }
+            { id: "mx_3", name: "Corona Extra", type: "drink", icon: "🍺" },
+            { id: "mx_4", name: "Текила", type: "drink", icon: "🥃" },
+            { id: "mx_5", name: "Агуа фреска", type: "drink", icon: "🥤" }
           ]
         },
         {
@@ -793,7 +1010,8 @@
             { id: "ru_1", name: "Сало", type: "food", icon: "🥓" },
             { id: "ru_2", name: "Укроп", type: "food", icon: "🌿" },
             { id: "ru_3", name: "Рыбка", type: "food", icon: "🐟" },
-            { id: "ru_4", name: "Водка", type: "drink", icon: "🧊" }
+            { id: "ru_4", name: "Водка", type: "drink", icon: "🧊" },
+            { id: "ru_5", name: "Квас", type: "drink", icon: "🥤" }
           ]
         },
         {
@@ -846,13 +1064,68 @@
 
 
 
-    // ════════════ SELECTED DISHES STATE ════════════
-    const selectedDishes = new Set();
-    const dishSubSelections = { de_4: ["Любое"] };
+    // ════════════ SELECTION STATE ════════════
+    // Режим выбора: 'priority' (наиболее желаемое) или 'refused' (нежеланные блюда/напитки)
+    let selectionMode = 'priority';
 
-    function getSubSelectionText(dishId) {
-      const arr = dishSubSelections[dishId] || ["Любое"];
-      return arr.join(', ');
+    // Статусы блюд: dishId -> 'priority' | 'refused' | null
+    const dishStatus = {};
+
+    // Статусы сортов пива (для de_4): sortName -> 'priority' | 'refused' | null
+    const beerSubStatus = {
+      "Вайш": null,
+      "Лагер": null,
+      "Пилснер": null,
+      "Любое": "priority"
+    };
+
+    // Всплывающее уведомление-тост
+    let toastTimer = null;
+    function showToast(message) {
+      let toast = document.getElementById('app-toast');
+      if (!toast) {
+        toast = document.createElement('div');
+        toast.id = 'app-toast';
+        toast.className = 'app-toast';
+        document.body.appendChild(toast);
+      }
+      toast.innerText = message;
+      toast.classList.add('visible');
+      if (toastTimer) clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => {
+        toast.classList.remove('visible');
+      }, 3000);
+    }
+
+    // Переключение режима выбора (Приоритет / Отказано)
+    function setSelectionMode(mode) {
+      if (selectionMode === mode) return;
+      selectionMode = mode;
+
+      const priorityBtn = document.getElementById('mode-btn-priority');
+      const refusedBtn = document.getElementById('mode-btn-refused');
+      if (priorityBtn && refusedBtn) {
+        priorityBtn.classList.toggle('active', mode === 'priority');
+        refusedBtn.classList.toggle('active', mode === 'refused');
+      }
+
+      if (tg && tg.HapticFeedback) {
+        tg.HapticFeedback.selectionChanged();
+      }
+    }
+
+    // Текст выбранных сортов для отображения в плашке пива
+    function getBeerSubSelectionText() {
+      if (beerSubStatus["Любое"] === 'priority') {
+        return "Любое";
+      }
+      const specific = ["Вайш", "Лагер", "Пилснер"];
+      const prio = specific.filter(s => beerSubStatus[s] === 'priority');
+      const ref = specific.filter(s => beerSubStatus[s] === 'refused');
+      const parts = [];
+      if (prio.length > 0) parts.push(prio.join(', '));
+      if (ref.length > 0) parts.push(`без: ${ref.join(', ')}`);
+      return parts.join('; ');
     }
 
     function findItemById(id) {
@@ -864,112 +1137,52 @@
       return null;
     }
 
+    // Клик по блюду / напитку
     function toggleDish(dishId) {
-      const willSelect = !selectedDishes.has(dishId);
+      const current = dishStatus[dishId] || null;
 
-      if (willSelect) {
-        selectedDishes.add(dishId);
-      } else {
-        selectedDishes.delete(dishId);
-      }
-
-      const itemEl = document.getElementById(`dish-${dishId}`);
-      if (itemEl) {
-        itemEl.classList.toggle('selected', willSelect);
-      }
-
-      // Handle suboptions opening for items like Beer
-      const suboptionsEl = document.getElementById(`suboptions-${dishId}`);
-      const labelEl = document.getElementById(`sub-label-${dishId}`);
-      if (suboptionsEl) {
-        suboptionsEl.classList.toggle('open', willSelect);
-        if (itemEl) {
-          itemEl.classList.toggle('has-sub-open', willSelect);
-        }
-        if (labelEl) {
-          const chosenText = getSubSelectionText(dishId);
-          labelEl.innerText = willSelect ? `(${chosenText})` : '';
-        }
-      }
-
-      updateSelectedCount();
-
-      if (tg && tg.HapticFeedback) {
-        tg.HapticFeedback.selectionChanged();
-      }
-    }
-
-    function selectSubOption(dishId, opt, event) {
-      if (event) {
-        event.stopPropagation();
-      }
-
-      const specificTypes = ["Вайш", "Лагер", "Пилснер"];
-      const allOrder = ["Вайш", "Лагер", "Пилснер", "Любое"];
-
-      if (!dishSubSelections[dishId]) {
-        dishSubSelections[dishId] = ["Любое"];
-      }
-
-      let current = [...dishSubSelections[dishId]];
-
-      if (opt === "Любое") {
-        // Клик по «Любое» сбрасывает конкретные сорта и оставляет только «Любое»
-        current = ["Любое"];
-      } else {
-        // Если было выбрано «Любое», убираем его при выборе конкретного сорта
-        current = current.filter(x => x !== "Любое");
-
-        if (current.includes(opt)) {
-          // Повторный клик — снимаем выбор с этого сорта
-          current = current.filter(x => x !== opt);
-          // Если сняты все сорта, автоматически возвращаем «Любое»
-          if (current.length === 0) {
-            current = ["Любое"];
+      if (selectionMode === 'priority') {
+        if (current === 'priority') {
+          // Повторный клик снимает статус приоритета
+          dishStatus[dishId] = null;
+          if (dishId === 'de_4') {
+            beerSubStatus["Любое"] = null;
+            beerSubStatus["Вайш"] = null;
+            beerSubStatus["Лагер"] = null;
+            beerSubStatus["Пилснер"] = null;
           }
         } else {
-          // Добавляем выбранный сорт (можно выбрать 1 или 2 сорта)
-          current.push(opt);
-
-          // ПРАВИЛО: если выбраны все 3 конкретных сорта (кроме «Любое»), автоматически выбирается «Любое»
-          const specificSelectedCount = current.filter(x => specificTypes.includes(x)).length;
-          if (specificSelectedCount >= 3) {
-            current = ["Любое"];
+          // Был null или 'refused' -> переключается в 'priority'
+          dishStatus[dishId] = 'priority';
+          if (dishId === 'de_4') {
+            const hasAnyPriority = Object.values(beerSubStatus).some(v => v === 'priority');
+            if (!hasAnyPriority) {
+              beerSubStatus["Любое"] = "priority";
+              beerSubStatus["Вайш"] = null;
+              beerSubStatus["Лагер"] = null;
+              beerSubStatus["Пилснер"] = null;
+            }
+          }
+        }
+      } else {
+        // selectionMode === 'refused'
+        if (current === 'refused') {
+          // Повторный клик снимает отказ
+          dishStatus[dishId] = null;
+        } else {
+          // Был null или 'priority' -> переключается в 'refused'
+          dishStatus[dishId] = 'refused';
+          if (dishId === 'de_4') {
+            // При отказе от пива сбрасываем подвыборы
+            beerSubStatus["Любое"] = null;
+            beerSubStatus["Вайш"] = null;
+            beerSubStatus["Лагер"] = null;
+            beerSubStatus["Пилснер"] = null;
           }
         }
       }
 
-      // Сортируем порядок для единообразного отображения
-      current.sort((a, b) => allOrder.indexOf(a) - allOrder.indexOf(b));
-      dishSubSelections[dishId] = current;
-
-      // Убеждаемся, что родительское блюдо «Пиво» выбрано
-      if (!selectedDishes.has(dishId)) {
-        selectedDishes.add(dishId);
-        const itemEl = document.getElementById(`dish-${dishId}`);
-        if (itemEl) {
-          itemEl.classList.add('selected');
-          itemEl.classList.add('has-sub-open');
-        }
-        const suboptionsEl = document.getElementById(`suboptions-${dishId}`);
-        if (suboptionsEl) suboptionsEl.classList.add('open');
-      }
-
-      // Обновляем подсветку чипсов
-      const suboptionsEl = document.getElementById(`suboptions-${dishId}`);
-      if (suboptionsEl) {
-        suboptionsEl.querySelectorAll('.suboption-chip').forEach(btn => {
-          const btnText = btn.innerText.trim();
-          btn.classList.toggle('active', current.includes(btnText));
-        });
-      }
-
-      // Обновляем бейдж в строке блюда: «(Вайш, Лагер)» или «(Любое)»
-      const labelEl = document.getElementById(`sub-label-${dishId}`);
-      if (labelEl) {
-        labelEl.innerText = `(${current.join(', ')})`;
-      }
-
+      updateDishUI(dishId);
       updateSelectedCount();
 
       if (tg && tg.HapticFeedback) {
@@ -977,35 +1190,175 @@
       }
     }
 
+    // Выбор сорта пива
+    function selectSubOption(dishId, opt, event) {
+      if (event) event.stopPropagation();
+
+      const specificTypes = ["Вайш", "Лагер", "Пилснер"];
+
+      if (selectionMode === 'refused') {
+        // ── СТРОГОЕ ПРАВИЛО: ЗАПРЕТ ОТКАЗА ОТ ВИДОВ ПИВА, ЕСЛИ В ПРИОРИТЕТЕ «ЛЮБОЕ» ──
+        if (dishStatus[dishId] === 'priority' && beerSubStatus["Любое"] === 'priority') {
+          showToast("⚠️ Нельзя отказаться от сорта, если в приоритете выбрано «Любое»");
+          if (tg && tg.HapticFeedback) {
+            tg.HapticFeedback.notificationOccurred('warning');
+          }
+          return;
+        }
+
+        if (opt === "Любое") {
+          // Отказ от «Любое» означает отказ от пива вообще
+          dishStatus[dishId] = 'refused';
+          beerSubStatus["Любое"] = null;
+          beerSubStatus["Вайш"] = null;
+          beerSubStatus["Лагер"] = null;
+          beerSubStatus["Пилснер"] = null;
+          showToast("Пиво отмечено как отказ");
+        } else {
+          // Отказ от конкретного сорта
+          if (beerSubStatus[opt] === 'refused') {
+            beerSubStatus[opt] = null;
+          } else {
+            beerSubStatus[opt] = 'refused';
+          }
+
+          // Если все 3 конкретных сорта отклонены, то всё пиво отклонено
+          const refusedCount = specificTypes.filter(t => beerSubStatus[t] === 'refused').length;
+          if (refusedCount >= 3) {
+            dishStatus[dishId] = 'refused';
+            specificTypes.forEach(t => beerSubStatus[t] = null);
+            showToast("Все сорта отклонены — пиво отмечено как отказ");
+          }
+        }
+      } else {
+        // selectionMode === 'priority'
+        if (opt === "Любое") {
+          // Клик по «Любое» сбрасывает все конкретные сорта и отказы от сортов
+          beerSubStatus["Любое"] = 'priority';
+          specificTypes.forEach(t => beerSubStatus[t] = null);
+          dishStatus[dishId] = 'priority';
+        } else {
+          // Снимаем «Любое» при выборе конкретного сорта
+          beerSubStatus["Любое"] = null;
+
+          if (beerSubStatus[opt] === 'priority') {
+            beerSubStatus[opt] = null;
+          } else {
+            beerSubStatus[opt] = 'priority';
+          }
+
+          // Если выбраны все 3 конкретных сорта, переключаем на «Любое»
+          const priorityCount = specificTypes.filter(t => beerSubStatus[t] === 'priority').length;
+          if (priorityCount >= 3) {
+            beerSubStatus["Любое"] = 'priority';
+            specificTypes.forEach(t => {
+              if (beerSubStatus[t] === 'priority') beerSubStatus[t] = null;
+            });
+          } else if (priorityCount === 0) {
+            // Если все конкретные сняты и нет отказов, возвращаем «Любое»
+            const hasRefused = specificTypes.some(t => beerSubStatus[t] === 'refused');
+            if (!hasRefused) {
+              beerSubStatus["Любое"] = 'priority';
+            }
+          }
+          dishStatus[dishId] = 'priority';
+        }
+      }
+
+      updateDishUI(dishId);
+      updateSelectedCount();
+
+      if (tg && tg.HapticFeedback) {
+        tg.HapticFeedback.selectionChanged();
+      }
+    }
+
+    // Обновление UI конкретного блюда
+    function updateDishUI(dishId) {
+      const itemEl = document.getElementById(`dish-${dishId}`);
+      if (!itemEl) return;
+
+      const status = dishStatus[dishId] || null;
+      itemEl.classList.remove('status-priority', 'status-refused');
+      if (status === 'priority') {
+        itemEl.classList.add('status-priority');
+      } else if (status === 'refused') {
+        itemEl.classList.add('status-refused');
+      }
+
+      // Подвыборы для пива
+      const suboptionsEl = document.getElementById(`suboptions-${dishId}`);
+      const labelEl = document.getElementById(`sub-label-${dishId}`);
+      if (suboptionsEl) {
+        const isPriority = status === 'priority';
+        suboptionsEl.classList.toggle('open', isPriority);
+        itemEl.classList.toggle('has-sub-open', isPriority);
+
+        if (labelEl) {
+          if (isPriority) {
+            const subText = getBeerSubSelectionText();
+            labelEl.innerText = subText ? `(${subText})` : '';
+          } else {
+            labelEl.innerText = '';
+          }
+        }
+
+        // Обновляем чипсы сортов
+        suboptionsEl.querySelectorAll('.suboption-chip').forEach(btn => {
+          const opt = btn.getAttribute('data-opt');
+          btn.classList.remove('status-priority', 'status-refused');
+          const optStatus = beerSubStatus[opt] || null;
+          if (optStatus === 'priority') {
+            btn.classList.add('status-priority');
+            btn.innerHTML = `✓ ${opt}`;
+          } else if (optStatus === 'refused') {
+            btn.classList.add('status-refused');
+            btn.innerHTML = `✕ ${opt}`;
+          } else {
+            btn.innerText = opt;
+          }
+        });
+      }
+    }
+
+    // Выбрать всё в кухне (зависит от текущего активного режима: Приоритет или Отказано)
     function selectAllInKitchen(kitchenId) {
       const kitchen = EVENT_CONFIG.plates.find(k => k.id === kitchenId);
       if (!kitchen) return;
 
-      const allSelected = kitchen.items.every(item => selectedDishes.has(item.id));
-
-      kitchen.items.forEach(item => {
-        if (allSelected) {
-          selectedDishes.delete(item.id);
-        } else {
-          selectedDishes.add(item.id);
-        }
-        const itemEl = document.getElementById(`dish-${item.id}`);
-        if (itemEl) {
-          itemEl.classList.toggle('selected', !allSelected);
-        }
-        const suboptionsEl = document.getElementById(`suboptions-${item.id}`);
-        const labelEl = document.getElementById(`sub-label-${item.id}`);
-        if (suboptionsEl) {
-          suboptionsEl.classList.toggle('open', !allSelected);
-          if (itemEl) {
-            itemEl.classList.toggle('has-sub-open', !allSelected);
+      if (selectionMode === 'priority') {
+        const allPriority = kitchen.items.every(item => dishStatus[item.id] === 'priority');
+        kitchen.items.forEach(item => {
+          dishStatus[item.id] = allPriority ? null : 'priority';
+          if (item.id === 'de_4') {
+            if (allPriority) {
+              beerSubStatus["Любое"] = null;
+              beerSubStatus["Вайш"] = null;
+              beerSubStatus["Лагер"] = null;
+              beerSubStatus["Пилснер"] = null;
+            } else {
+              beerSubStatus["Любое"] = "priority";
+              beerSubStatus["Вайш"] = null;
+              beerSubStatus["Лагер"] = null;
+              beerSubStatus["Пилснер"] = null;
+            }
           }
-          if (labelEl) {
-            const chosenText = getSubSelectionText(item.id);
-            labelEl.innerText = !allSelected ? `(${chosenText})` : '';
+          updateDishUI(item.id);
+        });
+      } else {
+        // selectionMode === 'refused'
+        const allRefused = kitchen.items.every(item => dishStatus[item.id] === 'refused');
+        kitchen.items.forEach(item => {
+          dishStatus[item.id] = allRefused ? null : 'refused';
+          if (item.id === 'de_4') {
+            beerSubStatus["Любое"] = null;
+            beerSubStatus["Вайш"] = null;
+            beerSubStatus["Лагер"] = null;
+            beerSubStatus["Пилснер"] = null;
           }
-        }
-      });
+          updateDishUI(item.id);
+        });
+      }
 
       updateSelectedCount();
 
@@ -1014,33 +1367,17 @@
       }
     }
 
+    // Обновление счетчиков в шапке
     function updateSelectedCount() {
-      const count = selectedDishes.size;
+      const priorityCount = Object.keys(dishStatus).filter(id => dishStatus[id] === 'priority').length;
+      const refusedCount = Object.keys(dishStatus).filter(id => dishStatus[id] === 'refused').length;
+
       const counterEl = document.getElementById('selected-counter');
       if (counterEl) {
-        counterEl.innerText = `Выбрано: ${count} блюд`;
-      }
-
-      // Update modal summary text
-      const summaryTextEl = document.getElementById('summary-dishes-text');
-      if (summaryTextEl) {
-        if (count === 0) {
-          summaryTextEl.innerText = "Пока ничего не выбрано — можно отметить прямо в меню или выбрать любимые напитки ниже.";
-        } else {
-          const names = [];
-          EVENT_CONFIG.plates.forEach(p => {
-            p.items.forEach(it => {
-              if (selectedDishes.has(it.id)) {
-                let displayName = it.name;
-                if (it.hasSubOptions && dishSubSelections[it.id]) {
-                  displayName += ` (${getSubSelectionText(it.id)})`;
-                }
-                names.push(`${it.icon} ${displayName}`);
-              }
-            });
-          });
-          summaryTextEl.innerHTML = names.map(n => `<span style="display:inline-block; background:rgba(255,255,255,0.08); padding:2px 8px; border-radius:8px; margin:2px;">${n}</span>`).join(' ');
-        }
+        counterEl.innerHTML = `
+          <span class="count-pill priority-pill" title="В приоритете">✓ ${priorityCount}</span>
+          <span class="count-pill refused-pill" title="Отказано">✕ ${refusedCount}</span>
+        `;
       }
     }
 
@@ -1054,39 +1391,48 @@
         const card = document.createElement('div');
         card.className = "plate-card";
 
-        // Separate food and drink items
+        // Разделяем блюда и напитки
         const foodItems = plate.items.filter(i => i.type === 'food');
         const drinkItems = plate.items.filter(i => i.type === 'drink');
 
         const renderItems = (items) => items.map(item => {
-          const isSelected = selectedDishes.has(item.id);
+          const status = dishStatus[item.id] || null;
+          const statusClass = status === 'priority' ? 'status-priority' : (status === 'refused' ? 'status-refused' : '');
+
           if (item.hasSubOptions) {
-            const chosenList = dishSubSelections[item.id] || (item.defaultSubOption ? [item.defaultSubOption] : ["Любое"]);
-            const chosenText = chosenList.join(', ');
+            const isPriority = status === 'priority';
+            const subText = isPriority ? getBeerSubSelectionText() : '';
             return `
               <div class="dish-item-wrapper" id="dish-wrapper-${item.id}">
-                <div class="dish-item ${isSelected ? 'selected has-sub-open' : ''}" id="dish-${item.id}" onclick="toggleDish('${item.id}')">
+                <div class="dish-item ${statusClass} ${isPriority ? 'has-sub-open' : ''}" id="dish-${item.id}" onclick="toggleDish('${item.id}')">
                   <div class="dish-info">
                     <span class="dish-icon">${item.icon}</span>
-                    <span class="dish-name">${item.name} <span class="dish-sub-selected" id="sub-label-${item.id}">${isSelected ? '(' + chosenText + ')' : ''}</span></span>
+                    <span class="dish-name">${item.name} <span class="dish-sub-selected" id="sub-label-${item.id}">${subText ? '(' + subText + ')' : ''}</span></span>
                   </div>
                   <div class="dish-meta">
                     <div class="dish-checkbox">
                       <span class="dish-checkbox-check">✓</span>
+                      <span class="dish-checkbox-cross">✕</span>
                     </div>
                   </div>
                 </div>
-                <div class="dish-suboptions ${isSelected ? 'open' : ''}" id="suboptions-${item.id}">
+                <div class="dish-suboptions ${isPriority ? 'open' : ''}" id="suboptions-${item.id}">
                   <div class="dish-suboptions-header">
                     <span class="dish-suboptions-title">Сорт пива (1–2 сорта или «Любое»):</span>
                   </div>
                   <div class="dish-suboptions-grid">
-                    ${item.subOptions.map(opt => `
-                      <button type="button" class="suboption-chip ${chosenList.includes(opt) ? 'active' : ''}"
-                        onclick="selectSubOption('${item.id}', '${opt}', event)">
-                        ${opt}
-                      </button>
-                    `).join('')}
+                    ${item.subOptions.map(opt => {
+                      const optStatus = beerSubStatus[opt] || null;
+                      const optClass = optStatus === 'priority' ? 'status-priority' : (optStatus === 'refused' ? 'status-refused' : '');
+                      const optLabel = optStatus === 'priority' ? `✓ ${opt}` : (optStatus === 'refused' ? `✕ ${opt}` : opt);
+                      return `
+                        <button type="button" class="suboption-chip ${optClass}"
+                          data-opt="${opt}"
+                          onclick="selectSubOption('${item.id}', '${opt}', event)">
+                          ${optLabel}
+                        </button>
+                      `;
+                    }).join('')}
                   </div>
                 </div>
               </div>
@@ -1094,7 +1440,7 @@
           }
 
           return `
-            <div class="dish-item ${isSelected ? 'selected' : ''}" id="dish-${item.id}" onclick="toggleDish('${item.id}')">
+            <div class="dish-item ${statusClass}" id="dish-${item.id}" onclick="toggleDish('${item.id}')">
               <div class="dish-info">
                 <span class="dish-icon">${item.icon}</span>
                 <span class="dish-name">${item.name}</span>
@@ -1102,6 +1448,7 @@
               <div class="dish-meta">
                 <div class="dish-checkbox">
                   <span class="dish-checkbox-check">✓</span>
+                  <span class="dish-checkbox-cross">✕</span>
                 </div>
               </div>
             </div>
@@ -1163,12 +1510,20 @@
       }
     }
 
-    // ════════════ APPROVE & TELEPORT TO MAIN MENU ════════════
+    // ════════════ WELCOME SCREEN & MAIN MENU TRANSITIONS ════════════
+    function showWelcomeScreen() {
+      const welcomeScreen = document.getElementById('welcome-screen');
+      const mainApp = document.getElementById('main-app');
+      if (welcomeScreen) welcomeScreen.style.display = 'block';
+      if (mainApp) mainApp.style.display = 'none';
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
     function approveAndTeleport() {
       // 1. Фиксируем подтверждение участия
       submitRsvp('accepted');
 
-      // 2. Скрываем стартовый экран и показываем основной интерфейс
+      // 2. Скрываем стартовый экран и открываем меню
       const welcomeScreen = document.getElementById('welcome-screen');
       const mainApp = document.getElementById('main-app');
       if (welcomeScreen) welcomeScreen.style.display = 'none';
@@ -1178,7 +1533,12 @@
       }
     }
 
-    // ════════════ SUBMIT RSVP (DIRECT APPROVE) ════════════
+    function savePreferences() {
+      submitRsvp('accepted');
+      showToast("💾 Предпочтения успешно сохранены!");
+    }
+
+    // ════════════ SUBMIT RSVP & DATA SYNC ════════════
     function submitRsvp(status) {
       if (status === 'accepted') {
         try {
@@ -1186,16 +1546,21 @@
         } catch (e) {}
       }
 
-      // Собираем список названий выбранных блюд (если гость отметил что-то в меню)
+      // Собираем списки приоритетов и отказов
       const selectedDishNames = [];
+      const refusedDishNames = [];
+
       EVENT_CONFIG.plates.forEach(p => {
         p.items.forEach(it => {
-          if (selectedDishes.has(it.id)) {
+          if (dishStatus[it.id] === 'priority') {
             let title = it.name;
-            if (it.hasSubOptions && dishSubSelections[it.id]) {
-              title += ` (${getSubSelectionText(it.id)})`;
+            if (it.hasSubOptions) {
+              const subInfo = getBeerSubSelectionText();
+              if (subInfo) title += ` (${subInfo})`;
             }
             selectedDishNames.push(`${title} (${p.title})`);
+          } else if (dishStatus[it.id] === 'refused') {
+            refusedDishNames.push(`${it.name} (${p.title})`);
           }
         });
       });
@@ -1207,14 +1572,15 @@
         guests: status === 'accepted' ? 1 : 0,
         drink: "",
         selected_dishes: status === 'accepted' ? selectedDishNames : [],
+        refused_dishes: status === 'accepted' ? refusedDishNames : [],
         comment: ""
       };
 
       if (status === 'accepted') {
         if (window.confetti) {
           confetti({
-            particleCount: 90,
-            spread: 70,
+            particleCount: 80,
+            spread: 60,
             origin: { y: 0.6 }
           });
         }
@@ -1227,7 +1593,7 @@
         }
       }
 
-      // Send structured data to Telegram bot
+      // Отправляем структурированные данные в бот Telegram
       if (tg && typeof tg.sendData === 'function') {
         try {
           tg.sendData(JSON.stringify(payload));
@@ -1236,32 +1602,18 @@
         }
       }
 
-      // Обновляем состояние кнопки на экране
+      // Обновляем текст кнопки на приветственном экране
       const heroBtn = document.getElementById('hero-rsvp-btn');
-      if (status === 'accepted') {
-        if (heroBtn) {
-          heroBtn.innerHTML = "<span>Подтверждено</span>";
-        }
+      if (status === 'accepted' && heroBtn) {
+        heroBtn.innerHTML = "<span>Подтверждено ✓</span>";
       }
     }
 
-    // Проверяем, было ли уже подтверждение ранее при открытии приложения
-    try {
-      // Сброс статуса для тестирования (?reset=1 в адресной строке)
-      if (urlParams.get('reset') === '1') {
-        localStorage.removeItem('rsvp_status');
-      }
-
-      if (localStorage.getItem('rsvp_status') === 'accepted') {
-        const welcomeScreen = document.getElementById('welcome-screen');
-        const mainApp = document.getElementById('main-app');
-        if (welcomeScreen) welcomeScreen.style.display = 'none';
-        if (mainApp) {
-          mainApp.style.display = 'block';
-          switchTab('kitchens');
-        }
-      }
-    } catch (e) {}
+    // Оставляем окно приветствия доступным по умолчанию для лёгкого редактирования.
+    // Если передан ?screen=menu, сразу переходим в меню.
+    if (urlParams.get('screen') === 'menu') {
+      approveAndTeleport();
+    }
 
     // ════════════ UTILITY ACTIONS ════════════
     function openMap() {

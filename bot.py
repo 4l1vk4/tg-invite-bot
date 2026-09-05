@@ -143,8 +143,10 @@ async def stats(update: Update, context: ContextTypes.DEFAULT_TYPE):
             plus_one = f" (+{int(r.get('guests', 1)) - 1})" if int(r.get("guests", 1)) > 1 else ""
             drink = f" | 🍷 {r.get('drink')}" if r.get("drink") else ""
             dishes = r.get("selected_dishes", [])
-            dishes_str = f" | 🍽️ {len(dishes)} блюд" if dishes else ""
-            text += f"• {name}{username}{plus_one}{drink}{dishes_str}\n"
+            refused = r.get("refused_dishes", [])
+            dishes_str = f" | ⭐ {len(dishes)}" if dishes else ""
+            refused_str = f" | 🚫 {len(refused)}" if refused else ""
+            text += f"• {name}{username}{plus_one}{drink}{dishes_str}{refused_str}\n"
         text += "\n"
 
     if declined:
@@ -247,6 +249,7 @@ async def webapp_data(update: Update, context: ContextTypes.DEFAULT_TYPE):
         guests = int(data.get("guests", 1))
         drink = data.get("drink", "")
         selected_dishes = data.get("selected_dishes", [])
+        refused_dishes = data.get("refused_dishes", [])
         comment = data.get("comment", "")
 
         response = {
@@ -257,6 +260,7 @@ async def webapp_data(update: Update, context: ContextTypes.DEFAULT_TYPE):
             "guests": guests,
             "drink": drink,
             "selected_dishes": selected_dishes,
+            "refused_dishes": refused_dishes,
             "comment": comment,
             "source": "mini_app",
             "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
@@ -275,7 +279,9 @@ async def webapp_data(update: Update, context: ContextTypes.DEFAULT_TYPE):
             if drink:
                 details_str += f"\n🍷 Любимый напиток: {drink}"
             if selected_dishes:
-                details_str += f"\n🍽️ Отмечено блюд: {len(selected_dishes)}"
+                details_str += f"\n⭐ В приоритете ({len(selected_dishes)}): {', '.join(selected_dishes)}"
+            if refused_dishes:
+                details_str += f"\n🚫 Отказано ({len(refused_dishes)}): {', '.join(refused_dishes)}"
             if comment:
                 details_str += f"\n💬 Комментарий: {comment}"
 
@@ -305,7 +311,9 @@ async def webapp_data(update: Update, context: ContextTypes.DEFAULT_TYPE):
             if drink:
                 admin_msg += f"🍷 Напитки: {drink}\n"
             if selected_dishes:
-                admin_msg += f"🍽️ Выбрано блюд ({len(selected_dishes)}): {', '.join(selected_dishes)}\n"
+                admin_msg += f"⭐ В приоритете ({len(selected_dishes)}): {', '.join(selected_dishes)}\n"
+            if refused_dishes:
+                admin_msg += f"🚫 Отказано ({len(refused_dishes)}): {', '.join(refused_dishes)}\n"
             if comment:
                 admin_msg += f"💬 Заметка: {comment}\n"
             admin_msg += f"🕐 Время: {response['timestamp']}"
