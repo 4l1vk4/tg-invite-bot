@@ -31,6 +31,8 @@ load_dotenv()
 
 TOKEN = os.getenv("BOT_TOKEN", "ВСТАВЬ_СЮДА_ТОКЕН_ОТ_BOTFATHER").strip()
 WEBAPP_URL = os.getenv("WEBAPP_URL", "https://example.com").strip()
+if WEBAPP_URL and not WEBAPP_URL.startswith("http://") and not WEBAPP_URL.startswith("https://"):
+    WEBAPP_URL = "https://" + WEBAPP_URL
 ADMIN_CHAT_ID = os.getenv("ADMIN_CHAT_ID", "").strip()
 
 # Файл для хранения ответов
@@ -69,7 +71,7 @@ def get_admin_id():
     try:
         return int(ADMIN_CHAT_ID)
     except ValueError:
-        return ADMIN_CHAT_ID
+        return ADMIN_CHAT_ID if ADMIN_CHAT_ID.startswith("@") else f"@{ADMIN_CHAT_ID}"
 
 
 # ─── КОМАНДЫ ─────────────────────────────────────────────────────────────────
