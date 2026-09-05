@@ -3,6 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
   <title>Гастрономический уикенд: 5 Кухонь 🎉</title>
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
@@ -782,9 +785,62 @@
   <div class="ambient-glow glow-2"></div>
 
   <div id="app">
-    <!-- ════════════ СТАРТОВЫЙ ЭКРАН: ТОЛЬКО ПРИВЕТСТВИЕ И ПОДТВЕРЖДЕНИЕ (БЕЗ ПОЛЗУНКА) ════════════ -->
-    <div id="welcome-screen">
-      <!-- Приветственная карточка -->
+    <!-- Вкладки навигации: доступны сразу в один клик в верхней части приложения -->
+    <div class="tab-bar">
+      <button class="tab-btn active" id="tab-btn-kitchens" onclick="switchTab('kitchens')">
+        <span>🍽️ Меню (5 кухонь)</span>
+      </button>
+      <button class="tab-btn" id="tab-btn-welcome" onclick="switchTab('welcome')">
+        <span>💌 Приглашение</span>
+      </button>
+      <button class="tab-btn" id="tab-btn-info" onclick="switchTab('info')">
+        <span>ℹ️ Детали</span>
+      </button>
+    </div>
+
+    <!-- ════════════ ВКЛАДКА 1: МЕНЮ 5 КУХОНЬ (ОТКРЫТА СРАЗУ ПО УМОЛЧАНИЮ) ════════════ -->
+    <div id="tab-kitchens" class="tab-content active">
+      <div class="kitchens-intro">
+        <div class="kitchens-intro-header">
+          <div class="kitchens-intro-title">Очередь подачи:</div>
+          <div class="kitchens-selected-counter" id="selected-counter">
+            <span class="count-pill priority-pill" title="В приоритете">✓ 0</span>
+            <span class="count-pill refused-pill" title="Отказано">✕ 0</span>
+          </div>
+        </div>
+
+        <!-- Режим выбора: 2 кнопки в ряд (Приоритет и Отказано) -->
+        <div class="selection-mode-bar">
+          <button type="button" class="mode-btn mode-priority active" id="mode-btn-priority" onclick="setSelectionMode('priority')">
+            <span class="mode-icon">✓</span>
+            <div class="mode-texts">
+              <span class="mode-title">Приоритет</span>
+              <span class="mode-desc">наиболее желаемое</span>
+            </div>
+          </button>
+          <button type="button" class="mode-btn mode-refused" id="mode-btn-refused" onclick="setSelectionMode('refused')">
+            <span class="mode-icon">✕</span>
+            <div class="mode-texts">
+              <span class="mode-title">Отказано</span>
+              <span class="mode-desc">нежеланные блюда/напитки</span>
+            </div>
+          </button>
+        </div>
+      </div>
+
+      <!-- Контейнер для 5 плашек кухонь -->
+      <div id="kitchens-container"></div>
+
+      <!-- Кнопка сохранения предпочтений -->
+      <div style="margin-top: 22px; padding-bottom: 20px;">
+        <button class="btn btn-primary" id="save-preferences-btn" onclick="savePreferences()" style="font-size: 15px; padding: 15px;">
+          <span>💾 Сохранить предпочтения</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- ════════════ ВКЛАДКА 2: КАРТОЧКА ПРИГЛАШЕНИЯ ════════════ -->
+    <div id="tab-welcome" class="tab-content">
       <div class="hero-card">
         <h1 class="hero-title" id="welcome-title">Гастро-уикенд 5 Кухонь 🎉</h1>
         <p class="hero-subtitle" id="welcome-sub">
@@ -816,127 +872,65 @@
         </div>
       </div>
 
-      <!-- Главная кнопка: подтверждает участие и открывает доступ к интерфейсу -->
-      <button class="btn btn-primary" id="hero-rsvp-btn" onclick="approveAndTeleport()" style="margin-top: 18px; font-size: 16px; padding: 16px;">
-        <span>Подтвердить</span>
+      <button class="btn btn-primary" onclick="switchTab('kitchens')" style="margin-top: 18px; font-size: 16px; padding: 16px;">
+        <span>🍽️ Перейти к выбору меню</span>
       </button>
     </div>
 
-    <!-- ════════════ ОСНОВНОЙ ИНТЕРФЕЙС (ДОСТУПЕН ТОЛЬКО ПОСЛЕ ПОДТВЕРЖДЕНИЯ) ════════════ -->
-    <div id="main-app" style="display: none;">
-      <!-- Панель быстрого возврата к окну приглашения для удобства тестирования и редактирования -->
-      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
-        <button type="button" onclick="showWelcomeScreen()" style="background: rgba(255, 255, 255, 0.05); border: 1px solid var(--card-border); color: #cbd5e1; border-radius: 10px; padding: 6px 12px; font-size: 12px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 6px;">
-          <span>← Окно приглашения</span>
-        </button>
-        <span style="font-size: 12px; color: var(--tg-hint);">Гастрономический сет</span>
-      </div>
-
-      <!-- Вкладки навигации основного интерфейса -->
-      <div class="tab-bar">
-        <button class="tab-btn active" id="tab-btn-kitchens" onclick="switchTab('kitchens')">
-          <span>🍽️ Меню (5 кухонь)</span>
-        </button>
-        <button class="tab-btn" id="tab-btn-info" onclick="switchTab('info')">
-          <span>ℹ️ Детали события</span>
-        </button>
-      </div>
-
-      <!-- Вкладка меню 5 кухонь -->
-      <div id="tab-kitchens" class="tab-content active">
-        <div class="kitchens-intro">
-          <div class="kitchens-intro-header">
-            <div class="kitchens-intro-title">Очередь подачи:</div>
-            <div class="kitchens-selected-counter" id="selected-counter">
-              <span class="count-pill priority-pill" title="В приоритете">✓ 0</span>
-              <span class="count-pill refused-pill" title="Отказано">✕ 0</span>
-            </div>
-          </div>
-
-          <!-- Режим выбора: 2 кнопки в ряд -->
-          <div class="selection-mode-bar">
-            <button type="button" class="mode-btn mode-priority active" id="mode-btn-priority" onclick="setSelectionMode('priority')">
-              <span class="mode-icon">✓</span>
-              <div class="mode-texts">
-                <span class="mode-title">Приоритет</span>
-                <span class="mode-desc">наиболее желаемое</span>
-              </div>
-            </button>
-            <button type="button" class="mode-btn mode-refused" id="mode-btn-refused" onclick="setSelectionMode('refused')">
-              <span class="mode-icon">✕</span>
-              <div class="mode-texts">
-                <span class="mode-title">Отказано</span>
-                <span class="mode-desc">нежеланные блюда/напитки</span>
-              </div>
-            </button>
+    <!-- ════════════ ВКЛАДКА 3: ДЕТАЛИ СОБЫТИЯ ════════════ -->
+    <div id="tab-info" class="tab-content">
+      <div class="info-card">
+        <div class="info-row">
+          <div class="info-icon" style="background: rgba(255, 94, 98, 0.15);">📅</div>
+          <div class="info-meta">
+            <div class="info-label">Дата & Время</div>
+            <div class="info-value">Суббота, 15 Сентября • 12:00</div>
           </div>
         </div>
-        <!-- Контейнер для 5 плашек кухонь -->
-        <div id="kitchens-container"></div>
-
-        <!-- Кнопка сохранения предпочтений -->
-        <div style="margin-top: 22px; padding-bottom: 20px;">
-          <button class="btn btn-primary" id="save-preferences-btn" onclick="savePreferences()" style="font-size: 15px; padding: 15px;">
-            <span>💾 Сохранить предпочтения</span>
-          </button>
+        <div class="info-row">
+          <div class="info-icon" style="background: rgba(254, 202, 87, 0.15);">📍</div>
+          <div class="info-meta">
+            <div class="info-label">Локация</div>
+            <div class="info-value">Загородная вилла «Forest Loft», Подмосковье</div>
+          </div>
+        </div>
+        <div class="info-row">
+          <div class="info-icon" style="background: rgba(72, 219, 251, 0.15);">🍽️</div>
+          <div class="info-meta">
+            <div class="info-label">Формат</div>
+            <div class="info-value">Гастрономический сет: 5 кухонь мира</div>
+          </div>
         </div>
       </div>
 
-      <!-- Вкладка деталей события -->
-      <div id="tab-info" class="tab-content">
-        <div class="info-card">
-          <div class="info-row">
-            <div class="info-icon" style="background: rgba(255, 94, 98, 0.15);">📅</div>
-            <div class="info-meta">
-              <div class="info-label">Дата & Время</div>
-              <div class="info-value">Суббота, 15 Сентября • 12:00</div>
-            </div>
-          </div>
-          <div class="info-row">
-            <div class="info-icon" style="background: rgba(254, 202, 87, 0.15);">📍</div>
-            <div class="info-meta">
-              <div class="info-label">Локация</div>
-              <div class="info-value">Загородная вилла «Forest Loft», Подмосковье</div>
-            </div>
-          </div>
-          <div class="info-row">
-            <div class="info-icon" style="background: rgba(72, 219, 251, 0.15);">🍽️</div>
-            <div class="info-meta">
-              <div class="info-label">Формат</div>
-              <div class="info-value">Гастрономический сет: 5 кухонь мира</div>
-            </div>
-          </div>
+      <div class="info-card">
+        <h3 style="font-size: 16px; margin-bottom: 12px; font-weight: 700;">🎒 Что взять с собой:</h3>
+        <div class="checklist-item">
+          <span>😋</span>
+          <span>Хороший аппетит и готовность пробовать 5 разных кухонь</span>
         </div>
+        <div class="checklist-item">
+          <span>🩱</span>
+          <span>Купальные принадлежности (бассейн, баня/сауна)</span>
+        </div>
+        <div class="checklist-item">
+          <span>🧥</span>
+          <span>Тёплую кофту или худи для вечернего костра</span>
+        </div>
+        <div class="checklist-item">
+          <span>🎲</span>
+          <span>Любимые настольные игры и классное настроение</span>
+        </div>
+      </div>
 
-        <div class="info-card">
-          <h3 style="font-size: 16px; margin-bottom: 12px; font-weight: 700;">🎒 Что взять с собой:</h3>
-          <div class="checklist-item">
-            <span>😋</span>
-            <span>Хороший аппетит и готовность пробовать 5 разных кухонь</span>
-          </div>
-          <div class="checklist-item">
-            <span>🩱</span>
-            <span>Купальные принадлежности (бассейн, баня/сауна)</span>
-          </div>
-          <div class="checklist-item">
-            <span>🧥</span>
-            <span>Тёплую кофту или худи для вечернего костра</span>
-          </div>
-          <div class="checklist-item">
-            <span>🎲</span>
-            <span>Любимые настольные игры и классное настроение</span>
-          </div>
-        </div>
-
-        <div class="info-card">
-          <h3 style="font-size: 16px; margin-bottom: 12px; font-weight: 700;">📍 Как добраться:</h3>
-          <p style="font-size: 13.5px; color: #c4c6d6; line-height: 1.5; margin-bottom: 14px;">
-            Точка сбора первой группы — м. Юго-Западная (организованный трансфер на машинах), либо своим ходом по навигатору.
-          </p>
-          <button class="btn btn-secondary" onclick="openMap()">
-            <span>🗺️ Открыть точку на Яндекс.Картах</span>
-          </button>
-        </div>
+      <div class="info-card">
+        <h3 style="font-size: 16px; margin-bottom: 12px; font-weight: 700;">📍 Как добраться:</h3>
+        <p style="font-size: 13.5px; color: #c4c6d6; line-height: 1.5; margin-bottom: 14px;">
+          Точка сбора первой группы — м. Юго-Западная (организованный трансфер на машинах), либо своим ходом по навигатору.
+        </p>
+        <button class="btn btn-secondary" onclick="openMap()">
+          <span>🗺️ Открыть точку на Яндекс.Картах</span>
+        </button>
       </div>
     </div>
   </div>
@@ -1510,36 +1504,22 @@
       }
     }
 
-    // ════════════ WELCOME SCREEN & MAIN MENU TRANSITIONS ════════════
+    // ════════════ NAVIGATION & SUBMIT ════════════
     function showWelcomeScreen() {
-      const welcomeScreen = document.getElementById('welcome-screen');
-      const mainApp = document.getElementById('main-app');
-      if (welcomeScreen) welcomeScreen.style.display = 'block';
-      if (mainApp) mainApp.style.display = 'none';
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+      switchTab('welcome');
     }
 
     function approveAndTeleport() {
-      // 1. Фиксируем подтверждение участия
-      submitRsvp('accepted');
-
-      // 2. Скрываем стартовый экран и открываем меню
-      const welcomeScreen = document.getElementById('welcome-screen');
-      const mainApp = document.getElementById('main-app');
-      if (welcomeScreen) welcomeScreen.style.display = 'none';
-      if (mainApp) {
-        mainApp.style.display = 'block';
-        switchTab('kitchens');
-      }
+      switchTab('kitchens');
     }
 
     function savePreferences() {
-      submitRsvp('accepted');
+      submitRsvp('accepted', true);
       showToast("💾 Предпочтения успешно сохранены!");
     }
 
     // ════════════ SUBMIT RSVP & DATA SYNC ════════════
-    function submitRsvp(status) {
+    function submitRsvp(status, shouldSendData = false) {
       if (status === 'accepted') {
         try {
           localStorage.setItem('rsvp_status', 'accepted');
@@ -1593,26 +1573,20 @@
         }
       }
 
-      // Отправляем структурированные данные в бот Telegram
-      if (tg && typeof tg.sendData === 'function') {
+      // Отправляем структурированные данные в бот Telegram ТОЛЬКО если пользователь нажал «Сохранить»
+      if (shouldSendData && tg && typeof tg.sendData === 'function') {
         try {
           tg.sendData(JSON.stringify(payload));
         } catch (err) {
           console.warn("tg.sendData warning:", err);
         }
       }
-
-      // Обновляем текст кнопки на приветственном экране
-      const heroBtn = document.getElementById('hero-rsvp-btn');
-      if (status === 'accepted' && heroBtn) {
-        heroBtn.innerHTML = "<span>Подтверждено ✓</span>";
-      }
     }
 
-    // Оставляем окно приветствия доступным по умолчанию для лёгкого редактирования.
-    // Если передан ?screen=menu, сразу переходим в меню.
-    if (urlParams.get('screen') === 'menu') {
-      approveAndTeleport();
+    // По умолчанию сразу открыта вкладка «Меню (5 кухонь)».
+    // Если передан ?tab=welcome, открываем вкладку приглашения.
+    if (urlParams.get('tab') === 'welcome') {
+      switchTab('welcome');
     }
 
     // ════════════ UTILITY ACTIONS ════════════

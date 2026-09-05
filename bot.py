@@ -80,8 +80,9 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     user = update.effective_user
     first_name = user.first_name or "Друг"
 
-    # Генерируем персональную ссылку с параметрами
-    personal_url = f"{WEBAPP_URL}?user_id={user.id}&name={first_name}"
+    # Генерируем персональную ссылку с параметрами (с антикешем v)
+    import time
+    personal_url = f"{WEBAPP_URL}?user_id={user.id}&name={first_name}&v={int(time.time())}"
 
     # Инлайн-кнопка под сообщением
     keyboard = [
