@@ -287,12 +287,15 @@
     .plate-header {
       position: relative;
       z-index: 1;
+      margin: -3px -2px 0 -2px;
       padding: 16px 18px 14px;
       display: flex;
       align-items: center;
       justify-content: space-between;
+      border-top-left-radius: 19px;
+      border-top-right-radius: 19px;
       border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-      background: linear-gradient(180deg, rgba(10, 11, 14, 0.5) 0%, rgba(12, 13, 17, 0.75) 100%);
+      background: linear-gradient(180deg, rgba(10, 11, 14, 0.55) 0%, rgba(12, 13, 17, 0.78) 100%);
       backdrop-filter: blur(8px);
       -webkit-backdrop-filter: blur(8px);
     }
@@ -683,19 +686,57 @@
   <div id="app">
     <!-- Вкладки навигации: доступны сразу в один клик в верхней части приложения -->
     <div class="tab-bar">
-      <button class="tab-btn active" id="tab-btn-kitchens" onclick="switchTab('kitchens')">
-        <span>🍽️ Меню (5 кухонь)</span>
-      </button>
-      <button class="tab-btn" id="tab-btn-welcome" onclick="switchTab('welcome')">
+      <button class="tab-btn active" id="tab-btn-welcome" onclick="switchTab('welcome')">
         <span>💌 Приглашение</span>
+      </button>
+      <button class="tab-btn" id="tab-btn-kitchens" onclick="switchTab('kitchens')">
+        <span>🍽️ Меню (5 кухонь)</span>
       </button>
       <button class="tab-btn" id="tab-btn-info" onclick="switchTab('info')">
         <span>ℹ️ Детали</span>
       </button>
     </div>
 
-    <!-- ════════════ ВКЛАДКА 1: МЕНЮ 5 КУХОНЬ (ОТКРЫТА СРАЗУ ПО УМОЛЧАНИЮ) ════════════ -->
-    <div id="tab-kitchens" class="tab-content active">
+    <!-- ════════════ ВКЛАДКА 1: КАРТОЧКА ПРИГЛАШЕНИЯ (ОТКРЫТА СРАЗУ ПО УМОЛЧАНИЮ) ════════════ -->
+    <div id="tab-welcome" class="tab-content active">
+      <div class="hero-card">
+        <h1 class="hero-title" id="welcome-title">Гастро-уикенд 5 Кухонь 🎉</h1>
+        <p class="hero-subtitle" id="welcome-sub">
+          <span class="guest-highlight" id="guest-name">Друг</span>, мы собираемся нашей компанией на дегустацию 5 национальных кухонь в гармоничном порядке подачи!
+        </p>
+      </div>
+
+      <div class="info-card">
+        <div class="info-row">
+          <div class="info-icon">📅</div>
+          <div class="info-meta">
+            <div class="info-label">Дата & Время</div>
+            <div class="info-value" id="event-date">Суббота, 15 Сентября • 12:00</div>
+          </div>
+        </div>
+        <div class="info-row">
+          <div class="info-icon">📍</div>
+          <div class="info-meta">
+            <div class="info-label">Локация</div>
+            <div class="info-value" id="event-location">Загородная вилла «Forest Loft», Подмосковье</div>
+          </div>
+        </div>
+        <div class="info-row">
+          <div class="info-icon">🍽️</div>
+          <div class="info-meta">
+            <div class="info-label">Формат</div>
+            <div class="info-value">Гастрономический сет: 5 кухонь мира</div>
+          </div>
+        </div>
+      </div>
+
+      <button class="btn btn-primary" onclick="switchTab('kitchens')" style="margin-top: 18px; font-size: 15px; padding: 15px;">
+        <span>🍽️ Перейти к выбору меню</span>
+      </button>
+    </div>
+
+    <!-- ════════════ ВКЛАДКА 2: МЕНЮ 5 КУХОНЬ ════════════ -->
+    <div id="tab-kitchens" class="tab-content">
       <div class="kitchens-intro">
         <div class="kitchens-intro-header">
           <div class="kitchens-intro-title">Очередь подачи:</div>
@@ -733,44 +774,6 @@
           <span>💾 Сохранить предпочтения</span>
         </button>
       </div>
-    </div>
-
-    <!-- ════════════ ВКЛАДКА 2: КАРТОЧКА ПРИГЛАШЕНИЯ ════════════ -->
-    <div id="tab-welcome" class="tab-content">
-      <div class="hero-card">
-        <h1 class="hero-title" id="welcome-title">Гастро-уикенд 5 Кухонь 🎉</h1>
-        <p class="hero-subtitle" id="welcome-sub">
-          <span class="guest-highlight" id="guest-name">Друг</span>, мы собираемся нашей компанией на дегустацию 5 национальных кухонь в гармоничном порядке подачи!
-        </p>
-      </div>
-
-      <div class="info-card">
-        <div class="info-row">
-          <div class="info-icon">📅</div>
-          <div class="info-meta">
-            <div class="info-label">Дата & Время</div>
-            <div class="info-value" id="event-date">Суббота, 15 Сентября • 12:00</div>
-          </div>
-        </div>
-        <div class="info-row">
-          <div class="info-icon">📍</div>
-          <div class="info-meta">
-            <div class="info-label">Локация</div>
-            <div class="info-value" id="event-location">Загородная вилла «Forest Loft», Подмосковье</div>
-          </div>
-        </div>
-        <div class="info-row">
-          <div class="info-icon">🍽️</div>
-          <div class="info-meta">
-            <div class="info-label">Формат</div>
-            <div class="info-value">Гастрономический сет: 5 кухонь мира</div>
-          </div>
-        </div>
-      </div>
-
-      <button class="btn btn-primary" onclick="switchTab('kitchens')" style="margin-top: 18px; font-size: 15px; padding: 15px;">
-        <span>🍽️ Перейти к выбору меню</span>
-      </button>
     </div>
 
     <!-- ════════════ ВКЛАДКА 3: ДЕТАЛИ СОБЫТИЯ ════════════ -->
@@ -1478,10 +1481,10 @@
       }
     }
 
-    // По умолчанию сразу открыта вкладка «Меню (5 кухонь)».
-    // Если передан ?tab=welcome, открываем вкладку приглашения.
-    if (urlParams.get('tab') === 'welcome') {
-      switchTab('welcome');
+    // По умолчанию открыта первая вкладка («Приглашение»).
+    // Если в ссылке передан ?tab=kitchens, открываем вкладку меню.
+    if (urlParams.get('tab') === 'kitchens') {
+      switchTab('kitchens');
     }
 
     // ════════════ UTILITY ACTIONS ════════════
