@@ -12,28 +12,40 @@
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
 
+    /* ══════ СТРОГАЯ 3-ЦВЕТНАЯ МИНИМАЛИСТИЧНАЯ СИСТЕМА (ТЁМНАЯ ТЕМА) ══════ */
     :root {
-      --tg-bg: var(--tg-theme-bg-color, #0d0e1b);
-      --tg-text: var(--tg-theme-text-color, #ffffff);
-      --tg-hint: var(--tg-theme-hint-color, #9ca3af);
-      --primary-gradient: linear-gradient(135deg, #ff5e62, #ff9966);
-      --card-bg: rgba(255, 255, 255, 0.06);
-      --card-border: rgba(255, 255, 255, 0.12);
-      --jp-color: #ff5e62;
-      --mx-color: #ff793f;
-      --it-color: #feca57;
-      --ru-color: #1dd1a1;
-      --de-color: #48dbfb;
+      /* 1. БАЗОВЫЙ ТЁМНЫЙ (Dark Graphite Base) */
+      --c-bg: #0a0b0e;
+      --c-surface: #13141a;
+      --c-surface-subtle: #191b22;
+      --c-border: #22242e;
+      --c-border-subtle: #1a1c24;
+
+      /* 2. БЕЛЫЙ / НЕЙТРАЛЬНЫЙ СВЕТЛЫЙ (Clean White & Grays) */
+      --c-text: #ffffff;
+      --c-muted: #8b90a0;
+      --c-faint: #4e5364;
+
+      /* 3. АКЦЕНТНЫЙ ИЗУМРУДНЫЙ (Refined Emerald Accent) */
+      --c-accent: #10b981;
+      --c-accent-glow: rgba(16, 185, 129, 0.12);
+      --c-accent-border: rgba(16, 185, 129, 0.35);
+
+      /* Telegram переменные с фоллбэком на нашу палитру */
+      --tg-bg: var(--c-bg);
+      --tg-text: var(--c-text);
+      --tg-hint: var(--c-muted);
     }
 
     body {
       font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, sans-serif;
-      background: var(--tg-bg);
-      color: var(--tg-text);
+      background: var(--c-bg);
+      color: var(--c-text);
       min-height: 100vh;
       overflow-x: hidden;
       padding-bottom: 30px;
       -webkit-tap-highlight-color: transparent;
+      -webkit-font-smoothing: antialiased;
     }
 
     #app {
@@ -44,92 +56,77 @@
       z-index: 1;
     }
 
-    /* Фоновые градиентные свечения */
-    .ambient-glow {
-      position: fixed;
-      width: 320px;
-      height: 320px;
-      border-radius: 50%;
-      filter: blur(100px);
-      pointer-events: none;
-      z-index: 0;
-      opacity: 0.18;
-    }
-    .glow-1 { top: -60px; left: -80px; background: #ff5e62; }
-    .glow-2 { bottom: 100px; right: -80px; background: #48dbfb; }
-    /* Приветственная карточка в первом окне */
+    /* Приветственная карточка */
     .hero-card {
-      background: var(--card-bg);
-      border: 1px solid var(--card-border);
-      border-radius: 24px;
+      background: var(--c-surface);
+      border: 1px solid var(--c-border);
+      border-radius: 16px;
       padding: 22px 18px;
       text-align: center;
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
       margin-bottom: 16px;
-      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
     }
     .hero-title {
-      font-size: 24px;
-      font-weight: 800;
-      line-height: 1.25;
-      margin-bottom: 10px;
-      background: linear-gradient(90deg, #ff9966, #ff5e62, #feca57);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
+      font-size: 22px;
+      font-weight: 700;
+      line-height: 1.3;
+      margin-bottom: 8px;
+      color: var(--c-text);
+      letter-spacing: -0.3px;
     }
     .hero-subtitle {
-      font-size: 14.5px;
-      color: #cbd5e1;
+      font-size: 14px;
+      color: var(--c-muted);
       line-height: 1.5;
       margin: 0;
     }
     .guest-highlight {
-      color: #ffffff;
-      font-weight: 700;
+      color: var(--c-text);
+      font-weight: 600;
     }
+
+    /* Вкладки навигации (Segmented control) */
     .tab-bar {
       display: flex;
-      background: rgba(255, 255, 255, 0.06);
+      background: var(--c-surface);
       padding: 4px;
-      border-radius: 16px;
+      border-radius: 14px;
       margin-bottom: 18px;
-      border: 1px solid var(--card-border);
+      border: 1px solid var(--c-border);
       gap: 4px;
     }
     .tab-btn {
       flex: 1;
       padding: 10px 6px;
-      border-radius: 12px;
+      border-radius: 10px;
       border: none;
       background: transparent;
-      color: var(--tg-hint);
+      color: var(--c-muted);
       font-size: 13px;
       font-weight: 600;
       cursor: pointer;
-      transition: all 0.25s ease;
+      transition: all 0.2s ease;
       display: flex;
       align-items: center;
       justify-content: center;
       gap: 6px;
     }
     .tab-btn.active {
-      background: rgba(255, 255, 255, 0.14);
-      color: #ffffff;
-      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+      background: var(--c-surface-subtle);
+      color: var(--c-text);
+      border: 1px solid var(--c-border);
     }
 
     .tab-content { display: none; }
     .tab-content.active {
       display: block;
-      animation: fadeIn 0.3s ease;
+      animation: fadeIn 0.25s ease;
     }
     @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(6px); }
+      from { opacity: 0; transform: translateY(4px); }
       to { opacity: 1; transform: translateY(0); }
     }
 
-    /* ══════ КАРТОЧКИ КУХОНЬ (ONE PLATE = ONE KITCHEN) ══════ */
+    /* ══════ КАРТОЧКИ КУХОНЬ ══════ */
     .kitchens-intro {
       display: flex;
       flex-direction: column;
@@ -143,10 +140,11 @@
       justify-content: space-between;
     }
     .kitchens-intro-title {
-      font-size: 16px;
-      font-weight: 700;
-      color: #ffffff;
-      letter-spacing: -0.2px;
+      font-size: 13.5px;
+      font-weight: 600;
+      color: var(--c-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
     }
     .kitchens-selected-counter {
       display: flex;
@@ -155,27 +153,25 @@
     }
     .count-pill {
       font-size: 12px;
-      font-weight: 700;
+      font-weight: 600;
       padding: 3px 9px;
-      border-radius: 10px;
+      border-radius: 8px;
       display: inline-flex;
       align-items: center;
       gap: 4px;
-      backdrop-filter: blur(8px);
-      -webkit-backdrop-filter: blur(8px);
     }
     .count-pill.priority-pill {
-      background: rgba(16, 185, 129, 0.12);
-      border: 1px solid rgba(16, 185, 129, 0.35);
-      color: #34d399;
+      background: var(--c-accent-glow);
+      border: 1px solid var(--c-accent-border);
+      color: var(--c-accent);
     }
     .count-pill.refused-pill {
-      background: rgba(244, 63, 94, 0.12);
-      border: 1px solid rgba(244, 63, 94, 0.32);
-      color: #fb7185;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--c-border);
+      color: var(--c-muted);
     }
 
-    /* Режим выбора: 2 кнопки в ряд */
+    /* Режим выбора: 2 кнопки */
     .selection-mode-bar {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -186,31 +182,30 @@
       align-items: center;
       gap: 9px;
       padding: 10px 12px;
-      border-radius: 14px;
-      background: rgba(255, 255, 255, 0.04);
-      border: 1px solid rgba(255, 255, 255, 0.09);
-      color: #94a3b8;
+      border-radius: 12px;
+      background: var(--c-surface);
+      border: 1px solid var(--c-border);
+      color: var(--c-muted);
       cursor: pointer;
-      transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+      transition: all 0.2s ease;
       text-align: left;
       user-select: none;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
     }
     .mode-btn:active {
-      transform: scale(0.975);
+      transform: scale(0.98);
     }
     .mode-icon {
-      width: 24px;
-      height: 24px;
-      border-radius: 7px;
+      width: 22px;
+      height: 22px;
+      border-radius: 6px;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 13px;
-      font-weight: 900;
+      font-size: 12px;
+      font-weight: 700;
       flex-shrink: 0;
-      background: rgba(255, 255, 255, 0.07);
-      color: #cbd5e1;
+      background: rgba(255, 255, 255, 0.05);
+      color: var(--c-muted);
       transition: all 0.2s ease;
     }
     .mode-texts {
@@ -219,15 +214,15 @@
       min-width: 0;
     }
     .mode-title {
-      font-size: 13.5px;
-      font-weight: 700;
+      font-size: 13px;
+      font-weight: 600;
       line-height: 1.2;
     }
     .mode-desc {
       font-size: 10px;
-      opacity: 0.72;
+      opacity: 0.7;
       line-height: 1.2;
-      margin-top: 1px;
+      margin-top: 2px;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
@@ -235,57 +230,53 @@
 
     /* Активный режим: Приоритет */
     .mode-btn.mode-priority.active {
-      background: rgba(16, 185, 129, 0.12);
-      border-color: rgba(16, 185, 129, 0.45);
-      color: #e6fffa;
-      box-shadow: 0 4px 16px rgba(16, 185, 129, 0.18);
+      background: var(--c-accent-glow);
+      border-color: var(--c-accent);
+      color: var(--c-text);
     }
     .mode-btn.mode-priority.active .mode-icon {
-      background: rgba(16, 185, 129, 0.25);
-      color: #34d399;
-      border: 1px solid rgba(16, 185, 129, 0.5);
+      background: var(--c-accent);
+      color: #000000;
+      font-weight: 800;
     }
     .mode-btn.mode-priority.active .mode-title {
-      color: #34d399;
+      color: var(--c-accent);
     }
 
     /* Активный режим: Отказано */
     .mode-btn.mode-refused.active {
-      background: rgba(244, 63, 94, 0.12);
-      border-color: rgba(244, 63, 94, 0.42);
-      color: #fff1f2;
-      box-shadow: 0 4px 16px rgba(244, 63, 94, 0.16);
+      background: var(--c-surface-subtle);
+      border-color: #4a4f60;
+      color: var(--c-text);
     }
     .mode-btn.mode-refused.active .mode-icon {
-      background: rgba(244, 63, 94, 0.22);
-      color: #fb7185;
-      border: 1px solid rgba(244, 63, 94, 0.45);
+      background: #4a4f60;
+      color: #ffffff;
+      font-weight: 800;
     }
     .mode-btn.mode-refused.active .mode-title {
-      color: #fb7185;
+      color: var(--c-text);
     }
 
+    /* Плашка кухни */
     .plate-card {
-      background: var(--card-bg);
-      border: 1px solid var(--card-border);
-      border-radius: 22px;
-      margin-bottom: 18px;
+      background: var(--c-surface);
+      border: 1px solid var(--c-border);
+      border-radius: 16px;
+      margin-bottom: 16px;
       overflow: hidden;
-      backdrop-filter: blur(14px);
-      transition: transform 0.2s ease, border-color 0.2s ease;
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.18);
+      transition: border-color 0.2s ease;
     }
     .plate-card:hover {
-      border-color: rgba(255, 255, 255, 0.22);
+      border-color: #323544;
     }
 
     .plate-header {
-      padding: 16px 18px;
+      padding: 14px 16px;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-      position: relative;
+      border-bottom: 1px solid var(--c-border);
     }
     .plate-header-left {
       display: flex;
@@ -293,45 +284,50 @@
       gap: 12px;
     }
     .plate-flag-icon {
-      width: 44px;
-      height: 44px;
-      border-radius: 14px;
+      width: 38px;
+      height: 38px;
+      border-radius: 10px;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 24px;
-      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.2);
+      font-size: 20px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--c-border);
     }
     .plate-title-box h3 {
-      font-size: 17px;
+      font-size: 16px;
       font-weight: 700;
-      color: #ffffff;
+      color: var(--c-text);
       margin: 0;
     }
     .plate-action-btn {
-      background: rgba(255, 255, 255, 0.08);
-      border: 1px solid rgba(255, 255, 255, 0.12);
-      border-radius: 10px;
-      color: #fff;
+      background: transparent;
+      border: 1px solid var(--c-border);
+      border-radius: 8px;
+      color: var(--c-muted);
       font-size: 11.5px;
-      padding: 6px 10px;
+      padding: 6px 11px;
       cursor: pointer;
       font-weight: 600;
-      transition: background 0.2s;
+      transition: all 0.2s ease;
+    }
+    .plate-action-btn:hover {
+      color: var(--c-text);
+      border-color: #4a4f60;
     }
 
     .plate-body {
       padding: 14px 16px 16px;
     }
 
-    /* Список блюд и напитков внутри кухни */
+    /* Блюда кухни */
     .dish-group-title {
       font-size: 11.5px;
-      font-weight: 700;
+      font-weight: 600;
       text-transform: uppercase;
-      letter-spacing: 0.8px;
-      color: var(--tg-hint);
-      margin: 8px 0 10px 4px;
+      letter-spacing: 0.7px;
+      color: var(--c-muted);
+      margin: 6px 0 10px 2px;
       display: flex;
       align-items: center;
       gap: 6px;
@@ -347,51 +343,53 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      background: rgba(255, 255, 255, 0.035);
-      border: 1px solid rgba(255, 255, 255, 0.07);
-      border-radius: 14px;
+      background: var(--c-surface-subtle);
+      border: 1px solid var(--c-border);
+      border-radius: 12px;
       padding: 10px 12px;
       cursor: pointer;
       transition: all 0.2s ease;
       user-select: none;
     }
     .dish-item:active {
-      transform: scale(0.985);
+      transform: scale(0.99);
     }
-    /* Статус: Приоритет (наиболее желаемое) */
+
+    /* Статус: Приоритет */
     .dish-item.status-priority {
-      background: rgba(16, 185, 129, 0.08);
-      border-color: rgba(16, 185, 129, 0.35);
+      background: var(--c-accent-glow);
+      border-color: var(--c-accent-border);
     }
     .dish-item.status-priority .dish-checkbox {
-      background: rgba(16, 185, 129, 0.2);
-      border-color: rgba(16, 185, 129, 0.55);
+      background: var(--c-accent);
+      border-color: var(--c-accent);
     }
     .dish-item.status-priority .dish-checkbox-check {
       display: block;
-      color: #34d399;
-      font-size: 13px;
+      color: #000000;
+      font-size: 11px;
       font-weight: 900;
     }
 
-    /* Статус: Отказано (нежеланные блюда/напитки) */
+    /* Статус: Отказано */
     .dish-item.status-refused {
-      background: rgba(244, 63, 94, 0.06);
-      border-color: rgba(244, 63, 94, 0.28);
+      opacity: 0.55;
+      background: rgba(255, 255, 255, 0.02);
+      border-color: var(--c-border);
     }
     .dish-item.status-refused .dish-checkbox {
-      background: rgba(244, 63, 94, 0.18);
-      border-color: rgba(244, 63, 94, 0.5);
+      background: rgba(255, 255, 255, 0.04);
+      border-color: #4a4f60;
     }
     .dish-item.status-refused .dish-checkbox-cross {
       display: block;
-      color: #fb7185;
-      font-size: 13px;
+      color: var(--c-muted);
+      font-size: 11px;
       font-weight: 900;
     }
     .dish-item.status-refused .dish-name {
-      color: #cbd5e1;
-      opacity: 0.8;
+      color: var(--c-muted);
+      text-decoration: line-through;
     }
 
     .dish-info {
@@ -401,15 +399,15 @@
       flex: 1;
     }
     .dish-icon {
-      font-size: 20px;
-      width: 28px;
+      font-size: 19px;
+      width: 26px;
       text-align: center;
       flex-shrink: 0;
     }
     .dish-name {
-      font-size: 14px;
-      font-weight: 600;
-      color: #f1f2f6;
+      font-size: 13.5px;
+      font-weight: 500;
+      color: var(--c-text);
       line-height: 1.35;
     }
 
@@ -427,35 +425,34 @@
     .dish-item.has-sub-open {
       border-bottom-left-radius: 4px;
       border-bottom-right-radius: 4px;
-      border-bottom: 1px dashed rgba(255, 255, 255, 0.15);
+      border-bottom: 1px dashed var(--c-border);
     }
     .dish-suboptions {
       display: none;
-      background: rgba(0, 0, 0, 0.32);
-      border: 1px solid rgba(255, 255, 255, 0.12);
+      background: #0d0e13;
+      border: 1px solid var(--c-border);
       border-top: none;
-      border-radius: 0 0 14px 14px;
+      border-radius: 0 0 12px 12px;
       padding: 10px 12px 12px;
-      backdrop-filter: blur(8px);
     }
     .dish-suboptions.open {
       display: block;
-      animation: subSlideDown 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+      animation: subSlideDown 0.2s ease;
     }
     @keyframes subSlideDown {
-      from { opacity: 0; transform: translateY(-6px); }
+      from { opacity: 0; transform: translateY(-4px); }
       to { opacity: 1; transform: translateY(0); }
     }
     .dish-suboptions-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 7px;
+      margin-bottom: 8px;
     }
     .dish-suboptions-title {
       font-size: 11px;
-      font-weight: 700;
-      color: var(--tg-hint);
+      font-weight: 600;
+      color: var(--c-muted);
       text-transform: uppercase;
       letter-spacing: 0.5px;
     }
@@ -470,13 +467,13 @@
       }
     }
     .suboption-chip {
-      background: rgba(255, 255, 255, 0.06);
-      border: 1px solid rgba(255, 255, 255, 0.12);
-      border-radius: 10px;
+      background: var(--c-surface);
+      border: 1px solid var(--c-border);
+      border-radius: 8px;
       padding: 7px 4px;
-      font-size: 12px;
+      font-size: 11.5px;
       font-weight: 600;
-      color: #cbd5e1;
+      color: var(--c-muted);
       text-align: center;
       cursor: pointer;
       transition: all 0.2s ease;
@@ -489,30 +486,28 @@
       transform: scale(0.96);
     }
     .suboption-chip.status-priority {
-      background: rgba(16, 185, 129, 0.18);
-      border-color: rgba(16, 185, 129, 0.45);
-      color: #34d399;
+      background: var(--c-accent-glow);
+      border-color: var(--c-accent);
+      color: var(--c-accent);
       font-weight: 700;
-      box-shadow: 0 2px 8px rgba(16, 185, 129, 0.15);
     }
     .suboption-chip.status-refused {
-      background: rgba(244, 63, 94, 0.16);
-      border-color: rgba(244, 63, 94, 0.42);
-      color: #fb7185;
-      font-weight: 700;
-      box-shadow: 0 2px 8px rgba(244, 63, 94, 0.12);
+      opacity: 0.5;
+      text-decoration: line-through;
+      border-color: var(--c-border);
+      color: var(--c-muted);
     }
     .dish-sub-selected {
       font-size: 12px;
-      color: #48dbfb;
+      color: var(--c-accent);
       font-weight: 600;
       margin-left: 4px;
     }
     .dish-checkbox {
-      width: 22px;
-      height: 22px;
-      border-radius: 7px;
-      border: 2px solid rgba(255, 255, 255, 0.25);
+      width: 20px;
+      height: 20px;
+      border-radius: 6px;
+      border: 1.5px solid #363945;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -531,20 +526,18 @@
       bottom: 24px;
       left: 50%;
       transform: translateX(-50%) translateY(100px);
-      background: rgba(20, 22, 38, 0.96);
-      border: 1px solid rgba(244, 63, 94, 0.45);
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.55), 0 0 20px rgba(244, 63, 94, 0.18);
-      color: #ffe4e6;
-      padding: 12px 18px;
-      border-radius: 14px;
+      background: #15161e;
+      border: 1px solid #2e3240;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+      color: var(--c-text);
+      padding: 11px 16px;
+      border-radius: 10px;
       font-size: 13px;
       font-weight: 600;
       z-index: 9999;
       pointer-events: none;
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
       opacity: 0;
-      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      transition: all 0.25s ease;
       max-width: 90%;
       text-align: center;
       line-height: 1.4;
@@ -554,21 +547,20 @@
       transform: translateX(-50%) translateY(0);
     }
 
-    /* Карточка с деталями (Таб 2 и 3) */
+    /* Карточки с деталями (Таб 2 и 3) */
     .info-card {
-      background: var(--card-bg);
-      border: 1px solid var(--card-border);
-      border-radius: 20px;
+      background: var(--c-surface);
+      border: 1px solid var(--c-border);
+      border-radius: 16px;
       padding: 18px;
       margin-bottom: 16px;
-      backdrop-filter: blur(12px);
     }
     .info-row {
       display: flex;
       align-items: center;
       gap: 14px;
       padding: 10px 0;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+      border-bottom: 1px solid var(--c-border);
     }
     .info-row:last-child {
       border-bottom: none;
@@ -578,28 +570,29 @@
       padding-top: 0;
     }
     .info-icon {
-      width: 42px;
-      height: 42px;
-      border-radius: 12px;
-      background: rgba(255, 255, 255, 0.07);
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--c-border);
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 20px;
+      font-size: 19px;
       flex-shrink: 0;
     }
     .info-meta { text-align: left; }
     .info-label {
       font-size: 11px;
-      color: var(--tg-hint);
+      color: var(--c-muted);
       text-transform: uppercase;
       letter-spacing: 0.6px;
       margin-bottom: 2px;
     }
     .info-value {
-      font-size: 14.5px;
+      font-size: 14px;
       font-weight: 600;
-      color: #ffffff;
+      color: var(--c-text);
     }
 
     .checklist-item {
@@ -607,9 +600,9 @@
       align-items: center;
       gap: 12px;
       font-size: 13.5px;
-      color: #e4e4e7;
-      padding: 9px 0;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+      color: var(--c-muted);
+      padding: 10px 0;
+      border-bottom: 1px solid var(--c-border);
       line-height: 1.4;
     }
     .checklist-item:last-child { border-bottom: none; }
@@ -617,10 +610,10 @@
     /* Кнопки */
     .btn {
       width: 100%;
-      padding: 15px;
-      border-radius: 16px;
+      padding: 14px;
+      border-radius: 12px;
       border: none;
-      font-size: 15.5px;
+      font-size: 15px;
       font-weight: 700;
       cursor: pointer;
       transition: all 0.2s ease;
@@ -632,158 +625,22 @@
     }
     .btn:active { transform: scale(0.98); }
     .btn-primary {
-      background: var(--primary-gradient);
-      color: #ffffff;
-      box-shadow: 0 4px 20px rgba(255, 94, 98, 0.4);
+      background: var(--c-accent);
+      color: #000000;
     }
     .btn-secondary {
-      background: rgba(255, 255, 255, 0.08);
-      border: 1px solid rgba(255, 255, 255, 0.15);
-      color: #ffffff;
+      background: transparent;
+      border: 1px solid var(--c-border);
+      color: var(--c-text);
       margin-top: 10px;
     }
-    .btn-danger-ghost {
-      background: none;
-      border: none;
-      color: #ef4444;
-      font-size: 13.5px;
-      padding: 12px;
-      cursor: pointer;
-      width: 100%;
-      margin-top: 6px;
-    }
-
-
-    /* Модальное окно (Bottom Sheet) */
-    .modal-overlay {
-      display: none;
-      position: fixed;
-      inset: 0;
-      background: rgba(0, 0, 0, 0.8);
-      z-index: 100;
-      align-items: flex-end;
-      justify-content: center;
-      backdrop-filter: blur(8px);
-      -webkit-backdrop-filter: blur(8px);
-    }
-    .modal-overlay.active {
-      display: flex;
-      animation: fadeIn 0.25s ease;
-    }
-    .modal-sheet {
-      background: #151726;
-      border-top-left-radius: 26px;
-      border-top-right-radius: 26px;
-      border: 1px solid rgba(255, 255, 255, 0.14);
-      border-bottom: none;
-      width: 100%;
-      max-width: 480px;
-      padding: 20px 20px 32px;
-      box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.5);
-      animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-      max-height: 90vh;
-      overflow-y: auto;
-    }
-    @keyframes slideUp {
-      from { transform: translateY(100%); }
-      to { transform: translateY(0); }
-    }
-    .sheet-handle {
-      width: 40px;
-      height: 4px;
-      background: rgba(255, 255, 255, 0.25);
-      border-radius: 4px;
-      margin: 0 auto 16px;
-    }
-    .sheet-title {
-      font-size: 20px;
-      font-weight: 800;
-      margin-bottom: 4px;
-      text-align: center;
-    }
-    .sheet-desc {
-      font-size: 13.5px;
-      color: var(--tg-hint);
-      text-align: center;
-      margin-bottom: 20px;
-      line-height: 1.4;
-    }
-
-    /* Формы внутри модалки */
-    .form-group {
-      margin-bottom: 18px;
-    }
-    .form-label {
-      font-size: 12.5px;
-      font-weight: 700;
-      color: #d1d5db;
-      text-transform: uppercase;
-      letter-spacing: 0.6px;
-      margin-bottom: 8px;
-      display: block;
-    }
-    .option-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 8px;
-    }
-    .option-chip {
-      background: rgba(255, 255, 255, 0.05);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      border-radius: 12px;
-      padding: 10px;
-      font-size: 13px;
-      font-weight: 600;
-      color: #e5e7eb;
-      text-align: center;
-      cursor: pointer;
-      transition: all 0.2s ease;
-    }
-    .option-chip.selected {
-      background: rgba(255, 94, 98, 0.18);
-      border-color: #ff5e62;
-      color: #ffffff;
-    }
-    .form-input {
-      width: 100%;
-      background: rgba(255, 255, 255, 0.06);
-      border: 1px solid rgba(255, 255, 255, 0.12);
-      border-radius: 14px;
-      padding: 12px 14px;
-      color: #fff;
-      font-size: 14px;
-      outline: none;
-      transition: border-color 0.2s;
-    }
-    .form-input:focus {
-      border-color: #ff5e62;
-    }
-
-    /* Сводка выбранных блюд в модалке */
-    .selected-summary-box {
-      background: rgba(29, 209, 161, 0.08);
-      border: 1px solid rgba(29, 209, 161, 0.25);
-      border-radius: 14px;
-      padding: 12px;
-      margin-bottom: 18px;
-      font-size: 13px;
-      line-height: 1.45;
-    }
-    .summary-title {
-      font-weight: 700;
-      color: #1dd1a1;
-      margin-bottom: 4px;
-      display: flex;
-      align-items: center;
-      gap: 6px;
+    .btn-secondary:hover {
+      border-color: #4a4f60;
+      background: rgba(255, 255, 255, 0.03);
     }
   </style>
 </head>
 <body>
-  <!-- Фоновые эффекты -->
-  <div class="ambient-glow glow-1"></div>
-  <div class="ambient-glow glow-2"></div>
-
   <div id="app">
     <!-- Вкладки навигации: доступны сразу в один клик в верхней части приложения -->
     <div class="tab-bar">
@@ -850,21 +707,21 @@
 
       <div class="info-card">
         <div class="info-row">
-          <div class="info-icon" style="background: rgba(255, 94, 98, 0.15);">📅</div>
+          <div class="info-icon">📅</div>
           <div class="info-meta">
             <div class="info-label">Дата & Время</div>
             <div class="info-value" id="event-date">Суббота, 15 Сентября • 12:00</div>
           </div>
         </div>
         <div class="info-row">
-          <div class="info-icon" style="background: rgba(254, 202, 87, 0.15);">📍</div>
+          <div class="info-icon">📍</div>
           <div class="info-meta">
             <div class="info-label">Локация</div>
             <div class="info-value" id="event-location">Загородная вилла «Forest Loft», Подмосковье</div>
           </div>
         </div>
         <div class="info-row">
-          <div class="info-icon" style="background: rgba(72, 219, 251, 0.15);">🍽️</div>
+          <div class="info-icon">🍽️</div>
           <div class="info-meta">
             <div class="info-label">Формат</div>
             <div class="info-value">Гастрономический сет: 5 кухонь мира</div>
@@ -872,7 +729,7 @@
         </div>
       </div>
 
-      <button class="btn btn-primary" onclick="switchTab('kitchens')" style="margin-top: 18px; font-size: 16px; padding: 16px;">
+      <button class="btn btn-primary" onclick="switchTab('kitchens')" style="margin-top: 18px; font-size: 15px; padding: 15px;">
         <span>🍽️ Перейти к выбору меню</span>
       </button>
     </div>
@@ -881,21 +738,21 @@
     <div id="tab-info" class="tab-content">
       <div class="info-card">
         <div class="info-row">
-          <div class="info-icon" style="background: rgba(255, 94, 98, 0.15);">📅</div>
+          <div class="info-icon">📅</div>
           <div class="info-meta">
             <div class="info-label">Дата & Время</div>
             <div class="info-value">Суббота, 15 Сентября • 12:00</div>
           </div>
         </div>
         <div class="info-row">
-          <div class="info-icon" style="background: rgba(254, 202, 87, 0.15);">📍</div>
+          <div class="info-icon">📍</div>
           <div class="info-meta">
             <div class="info-label">Локация</div>
             <div class="info-value">Загородная вилла «Forest Loft», Подмосковье</div>
           </div>
         </div>
         <div class="info-row">
-          <div class="info-icon" style="background: rgba(72, 219, 251, 0.15);">🍽️</div>
+          <div class="info-icon">🍽️</div>
           <div class="info-meta">
             <div class="info-label">Формат</div>
             <div class="info-value">Гастрономический сет: 5 кухонь мира</div>
@@ -925,7 +782,7 @@
 
       <div class="info-card">
         <h3 style="font-size: 16px; margin-bottom: 12px; font-weight: 700;">📍 Как добраться:</h3>
-        <p style="font-size: 13.5px; color: #c4c6d6; line-height: 1.5; margin-bottom: 14px;">
+        <p style="font-size: 13.5px; color: var(--c-muted); line-height: 1.5; margin-bottom: 14px;">
           Точка сбора первой группы — м. Юго-Западная (организованный трансфер на машинах), либо своим ходом по навигатору.
         </p>
         <button class="btn btn-secondary" onclick="openMap()">
@@ -951,8 +808,6 @@
           title: "Японская кухня",
           flag: "🇯🇵",
           icon: "🍣",
-          color: "var(--jp-color)",
-          colorHex: "#ff5e62",
           items: [
             { id: "jp_1", name: "Нигири с лососем", type: "food", icon: "🍣" },
             { id: "jp_2", name: "Нигири с тунцом", type: "food", icon: "🐟" },
@@ -967,8 +822,6 @@
           title: "Мексиканская кухня",
           flag: "🇲🇽",
           icon: "🌮",
-          color: "var(--mx-color)",
-          colorHex: "#ff793f",
           items: [
             { id: "mx_1", name: "Тако", type: "food", icon: "🌮" },
             { id: "mx_2", name: "Буррито", type: "food", icon: "🌯" },
@@ -983,8 +836,6 @@
           title: "Итальянская кухня",
           flag: "🇮🇹",
           icon: "🍕",
-          color: "var(--it-color)",
-          colorHex: "#feca57",
           items: [
             { id: "it_1", name: "Пицца", type: "food", icon: "🍕" },
             { id: "it_2", name: "Карбонара", type: "food", icon: "🍝" },
@@ -998,8 +849,6 @@
           title: "Русская кухня",
           flag: "🇷🇺",
           icon: "🪆",
-          color: "var(--ru-color)",
-          colorHex: "#1dd1a1",
           items: [
             { id: "ru_1", name: "Сало", type: "food", icon: "🥓" },
             { id: "ru_2", name: "Укроп", type: "food", icon: "🌿" },
@@ -1014,8 +863,6 @@
           title: "Немецкая кухня",
           flag: "🇩🇪",
           icon: "🥨",
-          color: "var(--de-color)",
-          colorHex: "#48dbfb",
           items: [
             { id: "de_1", name: "Жареные сосиски с картофелем и квашеной капустой", type: "food", icon: "🌭" },
             { id: "de_2", name: "Претцель", type: "food", icon: "🥨" },
@@ -1450,9 +1297,9 @@
         }).join('');
 
         card.innerHTML = `
-          <div class="plate-header" style="border-left: 4px solid ${plate.colorHex};">
+          <div class="plate-header">
             <div class="plate-header-left">
-              <div class="plate-flag-icon" style="background: ${plate.colorHex}22; border: 1px solid ${plate.colorHex}55;">
+              <div class="plate-flag-icon">
                 ${plate.flag}
               </div>
               <div class="plate-title-box">
@@ -1559,9 +1406,10 @@
       if (status === 'accepted') {
         if (window.confetti) {
           confetti({
-            particleCount: 80,
-            spread: 60,
-            origin: { y: 0.6 }
+            particleCount: 50,
+            spread: 50,
+            origin: { y: 0.6 },
+            colors: ['#ffffff', '#10b981', '#71717a']
           });
         }
         if (tg && tg.HapticFeedback) {
