@@ -42,7 +42,7 @@ def main():
             print("   👉 Обязательно укажи свой BOT_TOKEN в файле .env!")
         else:
             with open(env_file, "w") as dst:
-                dst.write("BOT_TOKEN=\nWEBAPP_URL=http://localhost:8000/webapp/\nADMIN_CHAT_ID=\n")
+                dst.write("BOT_TOKEN=\nWEBAPP_URL=http://localhost:8000/docs/\nADMIN_CHAT_ID=\n")
             print("📝 Создан файл .env.")
 
     # 2. Запускаем локальный веб-сервер в фоне
@@ -50,13 +50,13 @@ def main():
     server_thread.start()
 
     print(f"\n🌐 Локальный веб-сервер запущен:")
-    print(f"   👉 Тест в браузере на Mac: http://localhost:{PORT}/webapp/")
+    print(f"   👉 Тест в браузере на Mac: http://localhost:{PORT}/docs/")
     print("\n💡 Как тестировать Telegram Mini App прямо с телефона/Mac:")
     print("   Вариант 1 (Быстрый туннель без установки):")
     print(f"      Открой новый терминал и выполни: npx localtunnel --port {PORT}")
     print("      Скопируй полученную HTTPS ссылку в .env (WEBAPP_URL=https://...)")
     print("   Вариант 2 (Бесплатный хостинг за 1 минуту):")
-    print("      Залей папку webapp на GitHub Pages / Vercel / Netlify")
+    print("      Залей папку docs на GitHub Pages / Vercel / Netlify")
     print("=" * 65)
 
     # 3. Запускаем бота
