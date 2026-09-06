@@ -260,23 +260,30 @@
 
     /* Плашка кухни */
     .plate-card {
-      background: var(--c-surface);
+      position: relative;
+      background-color: var(--c-surface);
+      background-size: cover;
+      background-position: center top;
+      background-repeat: no-repeat;
       border: 1px solid var(--c-border);
       border-radius: 16px;
-      margin-bottom: 16px;
+      margin-bottom: 18px;
       overflow: hidden;
-      transition: border-color 0.2s ease;
+      transition: border-color 0.2s ease, transform 0.2s ease;
     }
     .plate-card:hover {
-      border-color: #323544;
+      border-color: #383c4e;
     }
 
     .plate-header {
-      padding: 14px 16px;
+      padding: 16px 16px 14px;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      border-bottom: 1px solid var(--c-border);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      background: linear-gradient(180deg, rgba(10, 11, 14, 0.45) 0%, rgba(14, 15, 20, 0.78) 100%);
+      backdrop-filter: blur(2px);
+      -webkit-backdrop-filter: blur(2px);
     }
     .plate-header-left {
       display: flex;
@@ -284,40 +291,49 @@
       gap: 12px;
     }
     .plate-flag-icon {
-      width: 38px;
-      height: 38px;
+      width: 40px;
+      height: 40px;
       border-radius: 10px;
       display: flex;
       align-items: center;
       justify-content: center;
       font-size: 20px;
-      background: rgba(255, 255, 255, 0.04);
-      border: 1px solid var(--c-border);
+      background: rgba(10, 11, 14, 0.65);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
     }
     .plate-title-box h3 {
       font-size: 16px;
       font-weight: 700;
       color: var(--c-text);
       margin: 0;
+      text-shadow: 0 2px 8px rgba(0, 0, 0, 0.8);
     }
     .plate-action-btn {
-      background: transparent;
-      border: 1px solid var(--c-border);
+      background: rgba(10, 11, 14, 0.6);
+      border: 1px solid rgba(255, 255, 255, 0.14);
       border-radius: 8px;
-      color: var(--c-muted);
+      color: #d1d5db;
       font-size: 11.5px;
       padding: 6px 11px;
       cursor: pointer;
       font-weight: 600;
       transition: all 0.2s ease;
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
     }
     .plate-action-btn:hover {
-      color: var(--c-text);
-      border-color: #4a4f60;
+      color: #ffffff;
+      border-color: rgba(255, 255, 255, 0.3);
+      background: rgba(20, 22, 28, 0.8);
     }
 
     .plate-body {
       padding: 14px 16px 16px;
+      background: linear-gradient(180deg, rgba(14, 15, 20, 0.88) 0%, rgba(10, 11, 14, 0.97) 80px, #0a0b0e 100%);
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
     }
 
     /* Блюда кухни */
@@ -808,6 +824,7 @@
           title: "Японская кухня",
           flag: "🇯🇵",
           icon: "🍣",
+          bgImage: "images/japan.jpg",
           items: [
             { id: "jp_1", name: "Нигири с лососем", type: "food", icon: "🍣" },
             { id: "jp_2", name: "Нигири с тунцом", type: "food", icon: "🐟" },
@@ -822,6 +839,7 @@
           title: "Мексиканская кухня",
           flag: "🇲🇽",
           icon: "🌮",
+          bgImage: "images/mexico.jpg",
           items: [
             { id: "mx_1", name: "Тако", type: "food", icon: "🌮" },
             { id: "mx_2", name: "Буррито", type: "food", icon: "🌯" },
@@ -836,6 +854,7 @@
           title: "Итальянская кухня",
           flag: "🇮🇹",
           icon: "🍕",
+          bgImage: "images/italy.jpg",
           items: [
             { id: "it_1", name: "Пицца", type: "food", icon: "🍕" },
             { id: "it_2", name: "Карбонара", type: "food", icon: "🍝" },
@@ -849,6 +868,7 @@
           title: "Русская кухня",
           flag: "🇷🇺",
           icon: "🪆",
+          bgImage: "images/russia.jpg",
           items: [
             { id: "ru_1", name: "Сало", type: "food", icon: "🥓" },
             { id: "ru_2", name: "Укроп", type: "food", icon: "🌿" },
@@ -863,6 +883,7 @@
           title: "Немецкая кухня",
           flag: "🇩🇪",
           icon: "🥨",
+          bgImage: "images/germany.jpg",
           items: [
             { id: "de_1", name: "Жареные сосиски с картофелем и квашеной капустой", type: "food", icon: "🌭" },
             { id: "de_2", name: "Претцель", type: "food", icon: "🥨" },
@@ -1231,6 +1252,9 @@
       EVENT_CONFIG.plates.forEach((plate) => {
         const card = document.createElement('div');
         card.className = "plate-card";
+        if (plate.bgImage) {
+          card.style.backgroundImage = `url('${plate.bgImage}')`;
+        }
 
         // Разделяем блюда и напитки
         const foodItems = plate.items.filter(i => i.type === 'food');
